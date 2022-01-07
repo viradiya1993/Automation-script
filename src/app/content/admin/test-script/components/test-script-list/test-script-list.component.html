@@ -1,0 +1,81 @@
+<div class="expansion-list testscript-grpList customScroll-contentScroll list-contentScroll">
+  <div *ngFor="let testScript of testScripts" class="testscriptlist-row d-flex justify-content-between">
+    <div class="d-flex justify-content-between align-items-center">     
+      <div *ngIf="testScript.epic" class="badge badge-rose-light epic-badge" matTooltip="{{ testScript.epic.name }}">
+        E
+      </div>
+      <div *ngIf="testScript.story" class="badge badge-success-light story-badge" matTooltip="{{ testScript.story.name }}">
+        S
+      </div>
+      <!-- <div *ngIf="testScript.website" class="badge badge-warning-light" matTooltip="{{ testScript.website.name }}">
+       <i class="material-icons">
+        rule_folder</i>        
+       </div>        -->
+       <div *ngIf="testScript.website" class="" matTooltip="{{ testScript.website.name }}">
+        <i class="material-icons text-snippet-icon">text_snippet</i>        
+        </div>
+       
+      <div class="testscript-name" (click)="openTestScriptDialog(testScript)">
+        {{ testScript.name }}
+      </div>
+    </div>
+    <div class="storyscript-info">
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="badge badge-info-light test-stepsnumber">
+          Steps: {{ testScript.numberOfSteps }}
+        </div>
+        <app-multi-value-chip [values]="testScript.tags"></app-multi-value-chip>
+        <div [ngClass]="getStatusClass(testScript.status)">
+          {{ testScript.status }}
+        </div>
+
+        <button class="btn btn-link btn-primary btn-just-icon custom-btn-icon ml-1"
+          (click)="setTestScriptToExecute(testScript)" matTooltip="Run Test Script">
+          <mat-icon>play_circle_outline</mat-icon>
+        </button>
+
+        <button mat-icon-button class="btn btn-link btn-primary btn-just-icon custom-btn-icon ml-1"
+          [matMenuTriggerFor]="menu" aria-label="Test Script More Menu">
+          <mat-icon class="material-icons">more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item class="custom-matmenu" (click)="openTestScriptCopyDialog(testScript)"
+            matTooltip="Duplicate Test Script">
+            <mat-icon class="custom-btn-icon mr-0">content_copy</mat-icon>
+            <span>Duplicate</span>
+          </button>
+          <button mat-menu-item class="custom-matmenu" (click)="
+              dialogService.openTestScriptDeleteDialog(
+                testScript.testScriptId,
+                testScript.name
+              )
+            " matTooltip="Delete Test Script">
+            <mat-icon class="custom-btn-icon mr-0">delete</mat-icon>
+            <span>Delete</span>
+          </button>
+        </mat-menu>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="testScripts.length > 0" class="testscriptlist-row p-1">
+    <button mat-flat-button class="btn btn-primary btn-link text-capitalize"
+      (click)="dialogService.openTestScriptDialog('add', storyId, undefined)">
+      Add Test Script
+    </button>
+  </div>
+
+  <div *ngIf="testScripts.length === 0" class="testscriptlist-row p-1">
+    <div class="font-italic ml-2 font-weight-light">
+      Please<button mat-flat-button class="btn btn-primary btn-link text-capitalize"
+        (click)="dialogService.openTestScriptDialog('add', storyId, undefined)">
+        Add Test Script</button>to get started
+    </div>
+  </div>
+</div>
+<!-- Start Pagination -->
+<div class="pagination" *ngIf="testScripts.length > 0">
+  <mat-paginator *ngIf="filterService.appliedFilter.showList === 'testScripts'" [length]="totalElements" [pageSize]="10"
+    [pageSizeOptions]="[10, 20, 50]" (page)="pageChange($event)"></mat-paginator>
+</div>
+<!-- End Pagination -->

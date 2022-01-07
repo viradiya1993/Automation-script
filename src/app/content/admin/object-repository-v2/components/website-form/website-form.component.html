@@ -1,0 +1,25 @@
+<div (click)="$event.stopPropagation()">
+  <!-- <h4 class="mat-title" *ngIf="!website">Add Website</h4>
+  <h4 class="mat-title" *ngIf="website">Edit Website</h4> -->
+
+  <form [formGroup]="websiteFormGroup">
+    <mat-form-field appearance="fill">
+      <mat-label>Website Name</mat-label>
+      <input matInput placeholder="Name" formControlName="name" />
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Website URL</mat-label>
+      <input matInput placeholder="Website Url" formControlName="websiteUrl" />
+    </mat-form-field>
+  </form>
+
+  <div class="d-flex justify-content-end">
+    <button mat-raised-button class="btn btn-primary" [disabled]="!websiteFormGroup.valid"
+      (click)="onWebsiteSaveClick()">
+      Save
+    </button>
+    <button mat-button (click)="onWebsiteCancelClick()">
+      Cancel
+    </button>
+  </div>
+</div>

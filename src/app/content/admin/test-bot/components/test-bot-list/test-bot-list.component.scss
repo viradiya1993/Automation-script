@@ -1,0 +1,66 @@
+.test-bot-list-headers-align .mat-expansion-panel-header-description {
+    justify-content: space-between;
+    align-items: center;
+  }
+.all-test-bot-row {
+  padding: 10px 5px;
+  height: 40px;
+  font-size: 14px;
+  font-weight: 400;
+  border-bottom: 1px solid #e9e9e9;
+  cursor: pointer;  
+  .all-test-bot-title {
+    font-weight: 400; 
+    color: #333;
+  }
+}
+.test-bot-title:hover { 
+  color: #9c27b0;
+}
+.all-test-bot-row:hover {
+  background: #f7f7f7;
+}
+.test-bots-list.mat-expansion-panel {
+  .mat-expansion-panel-header {
+    padding: 0 5px;
+    min-height: 40px !important;
+    height: 40px;
+  }
+  .test-bot-header-title {
+    margin-right: 0;
+    width: 100%;
+  }
+  .test-bot-title {
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 24px;
+    margin: 0;
+    text-overflow: ellipsis;
+    width: calc(100% - 20px);
+    overflow: hidden;
+    display: inline-block;
+    white-space: nowrap;
+  }
+  .test-bot-descrpt {
+    font-weight: 300;
+    padding: 0 8px;
+  }
+  .badge {
+    max-height: 21px;
+    margin-top: 2px;
+  }
+}
+.test-bots-list.mat-expansion-panel.mat-expanded:first-child {
+  margin-top: 0;
+}
+.test-bots-list.mat-expansion-panel.mat-expanded {
+    background: #f7f7f7;
+    border-bottom: 0px solid #e9e9e9;
+    box-shadow:rgb(156, 39, 176, 0.6) 0px 0px 0px 1px inset;
+    margin-top: -1px;
+    outline: none;
+    .test-bot-title {
+      color: #9c27b0;
+      font-weight: 400;
+    }
+}

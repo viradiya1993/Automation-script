@@ -1,0 +1,74 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <div class="frame-wrapper">
+          <div class="frame-element">
+            <a
+              class="btn btn-link btn-primary down-arrow show-up-arrow"
+              (click)="toggleFrame3 = !toggleFrame3"
+            >
+              <h2 class="m-0">
+                AHQ Knowledge
+                <span
+                  ><i
+                    class="material-icons fw-600"
+                    aria-label="Show Test Scripts"
+                    >keyboard_arrow_down</i
+                  ></span
+                >
+              </h2>
+            </a>
+            <div class="frame-content" *ngIf="toggleFrame3">
+              <div class="row ahq-video-wrapper">
+                <div class="col-4">
+                  <a
+                    class="ahq-video-item"
+                    (click)="
+                      openVideoDialog(
+                        'https://www.youtube.com/embed/28Q5DIdfW3g?rel=0&amp;autoplay=1'
+                      )
+                    "
+                  >
+                    <img src="/assets/img/Overview-demo-pic.png" alt="" />
+                    <img src="/assets/img/Overview-demo-pic.png" alt="" />
+                  </a>
+                </div>
+                <div class="col-4">
+                  <a
+                    class="ahq-video-item"
+                    (click)="
+                      openVideoDialog(
+                        'https://www.youtube.com/embed/E58eyhy0_mY?rel=0&amp;autoplay=1'
+                      )
+                    "
+                  >
+                    <span>
+                      <img src="/assets/img/TestScript-demo-pic.png" alt="" />
+                      <img src="/assets/img/TestScript-demo-pic.png" alt="" />
+                    </span>
+                  </a>
+                </div>
+                <div class="col-4">
+                  <a
+                    class="ahq-video-item"
+                    (click)="
+                      openVideoDialog(
+                        'https://www.youtube.com/embed/n31v1IXEzMc?rel=0&amp;autoplay=1'
+                      )
+                    "
+                  >
+                    <span>
+                      <img src="/assets/img/Rolebased-demo-pic.png" alt="" />
+                      <img src="/assets/img/Rolebased-demo-pic.png" alt="" />
+                    </span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

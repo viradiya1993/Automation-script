@@ -1,0 +1,45 @@
+<div class="add-test-bot">
+    <button mat-stroked-button class="btn btn-primary btn-link text-capitalize"
+      #testBotFormMatTrigger="matMenuTrigger" [matMenuTriggerFor]="testBotFormMenu">
+      <i class="material-icons">add</i> Add Test Bot
+    </button>
+  
+    <mat-menu #testBotFormMenu="matMenu" [hasBackdrop]="false" xPosition="before" (closed)="testBotForm.reset()"
+      class="add-testBot-form mat-menu-form">
+      <div (click)="$event.stopPropagation()">
+        <form [formGroup]="testBotForm" class="row">
+          <div class="col-md-12">
+            <mat-form-field appearance="fill">
+              <mat-label>Name</mat-label>
+              <input matInput placeholder="Name" formControlName="name" />
+            </mat-form-field>
+          </div>
+          <div class="col-md-12">
+            <mat-form-field appearance="fill">
+              <mat-label>Description</mat-label>
+              <textarea matInput rows="3" cols="50" placeholder="Summary" formControlName="description"></textarea>
+            </mat-form-field>
+          </div>
+         
+        </form>
+        <div class="row">
+          <div class="col-md-12">
+            <mat-checkbox [checked]="false" (change)="onChangeDefaultConfiguration($event)">
+              <h4>Use Default Configuration</h4>
+            </mat-checkbox>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="d-flex justify-content-end">
+              <button mat-raised-button class="btn btn-primary" [disabled]="!testBotForm.valid"
+                (click)="onTestBotSaveClick()">
+                Save
+              </button>
+              <button mat-button (click)="onTestBotCancelClick()">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-menu>
+  </div>

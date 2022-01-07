@@ -1,0 +1,54 @@
+@mixin circle($arc) {
+  border-radius: $arc;
+  -webkit-border-radius: $arc;
+  -moz-border-radius: $arc;
+}
+.item-list {
+  background-color: #FFF;
+  display: flex;
+  margin: 5px;
+  padding-right: 10px;
+  color: #000;
+  @include circle(30px);
+  .item--text {
+    padding: 5px 10px 5px 13px;
+  }
+  .item--remove {
+    color: #9c27b0;
+    @include circle(21px);
+    margin: 6px 0px;
+    padding-top: 0;
+    font-size: 14px;
+    cursor: pointer;
+  }
+}
+
+.multi-insert-container {
+  display: flex;
+  height: auto;
+  padding: 0px 0;
+  .multi-insert-item-list {
+    position: relative;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    -webkit-box-align: end;
+    -ms-flex-align: end;
+    align-items: flex-end;
+    width: 100%;
+    display: inline-flex;
+  }
+  input {
+    padding-left: 10px;
+    height: 32px;
+    -webkit-box-flex: 1;
+    -ms-flex-positive: 1;
+    flex-grow: 1;
+    border: none;
+    width: auto;
+    margin: 5px;
+  }
+}

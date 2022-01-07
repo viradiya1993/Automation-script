@@ -1,0 +1,57 @@
+<h2 mat-dialog-title *ngIf="!client.id" style="text-align: center">
+  Add Organization Information
+</h2>
+<h2 mat-dialog-title *ngIf="client.id" style="text-align: center">
+  Edit Organization Information
+</h2>
+<mat-dialog-content class="mat-typography">
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-12 ml-auto mr-auto">
+        <form role="form" [formGroup]="clientForm" novalidate>
+          <div class="form-group has-default">
+            <div class="input-group">
+              <div class="input-group-prepend"></div>
+              <input
+                type="text"
+                name="orgName"
+                id="orgName"
+                formControlName="orgName"
+                [(ngModel)]="client.orgName"
+                (change)="validateOrgName()"
+                class="form-control input-sm"
+                placeholder="Organization Name"
+              />
+            </div>
+            <div
+              *ngIf="submitted && f.orgName.errors"
+              class="help-block"
+              style="color: red"
+            >
+              <div *ngIf="f.orgName.errors.required">
+                Organization Name is required
+              </div>
+            </div>
+            <div
+              *ngIf="error.domain"
+              class="help-block"
+              [style.color]="error.domainCode === 400 ? 'red' : 'green'"
+            >
+              {{ error.domainValue }}
+            </div>
+          </div>
+          <mat-dialog-actions align="end">
+            <button class="btn btn-default mr-3" mat-dialog-close>
+              Cancel
+            </button>
+            <button class="btn btn-primary" cdkFocusInitial (click)="submit()">
+              save
+            </button>
+          </mat-dialog-actions>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- </mat-dialog-content> --></mat-dialog-content
+>

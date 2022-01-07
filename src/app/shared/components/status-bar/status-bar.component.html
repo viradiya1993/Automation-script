@@ -1,0 +1,10 @@
+<div class="status-bar-wrapper">
+    <div
+        class="status-bar-item"
+        *ngFor="let item of items"
+        [style.width]="item.width"
+        [style.backgroundColor]="item.color"
+    >
+        {{ item?.text }}
+    </div>
+</div>

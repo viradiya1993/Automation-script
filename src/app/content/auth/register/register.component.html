@@ -1,0 +1,233 @@
+<div class="wrapper wrapper-full-page">
+  <div class="page-header register-page header-filter py-5" filter-color="black" style="
+      background-image: url('./assets/img/register.jpg');
+      background-size: auto;
+      height: 100%;
+      background-position: top center;
+    ">
+    <div class="container">
+      <div class="row d-flex justify-content-center align-items-center mt-5">
+        <div class="col-md-10" *ngIf="success">
+          <div class="alert alert-success alert-mt-10">
+            <button aria-label="Close" class="close mat-button" (click)="redirectLogin()" data-dismiss="alert"
+              mat-button="" type="button">
+              <span class="mat-button-wrapper"><i class="material-icons">close</i></span>
+              <div class="mat-button-ripple mat-ripple" matripple=""></div>
+              <div class="mat-button-focus-overlay"></div>
+            </button>
+            <span><b> {{ success }} </b></span>
+          </div>
+        </div>
+
+        <div class="col-md-10" *ngIf="errorMsg">
+          <div class="alert alert-danger alert-mt-10">
+            <button aria-label="Close" class="close mat-button" (click)="redirectLogin()" data-dismiss="alert"
+              mat-button="" type="button">
+              <span class="mat-button-wrapper"><i class="material-icons">close</i></span>
+              <div class="mat-button-ripple mat-ripple" matripple=""></div>
+              <div class="mat-button-focus-overlay"></div>
+            </button>
+            <span [innerHtml]="errorMsg"></span>
+          </div>
+        </div>
+
+        <div class="col-xl-8 col-lg-8 col-md-8 col-sm-10 col-xs-12" *ngIf="!success">
+          <div class="card card-signup" style="padding: 0 15px;">
+            <div class="card-header card-header-white text-center ml-auto">
+              <!-- <h4 class="card-title">AutomationHQ</h4> -->
+              <div class="logo-form">
+                <img src="/assets/img/logo/ahq-logo-login.png" alt="AutomationHQ">
+              </div>
+            </div>
+            <p class="card-description text-center">Registration</p>
+            <div class="card-body px-0 pb-4">
+              <form role="form" [formGroup]="registrationForm" novalidate>
+                <div class="row">
+                  <div class="col-12">
+                    <div class="form-group has-default">
+                      <div class="input-group">
+                        <div class="input-group-prepend"></div>
+                        <input type="text" name="company" id="company" formControlName="company"
+                          [(ngModel)]="registrationModel.organizationName" class="form-control" placeholder="Company" />
+                      </div>
+                      <div *ngIf="submitted && f.company.errors" class="help-block" style="color: red;">
+                        <div *ngIf="f.company.errors.required">
+                          Company name is required
+                        </div>
+                        <div *ngIf="f.company.errors.organizationExists">
+                          This organization name is already taken. Please choose
+                          another organization name
+                        </div>
+                      </div>
+                      <div *ngIf="submitted && hasError.hasOwnProperty('company')" class="help-block"
+                        style="color: red;">
+                        {{ hasError['company'] }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="form-group has-default">
+                      <div class="input-group">
+                        <div class="input-group-prepend"></div>
+                        <input type="text" name="first_name" id="first_name" formControlName="firstName"
+                          [(ngModel)]="registrationModel.user.firstName" class="form-control"
+                          placeholder="First Name" />
+                      </div>
+                      <div *ngIf="submitted && f.firstName.errors" class="help-block" style="color: red;">
+                        <div *ngIf="f.firstName.errors.required">
+                          First name is required
+                        </div>
+                      </div>
+                      <div *ngIf="submitted && hasError.hasOwnProperty('firstName')" class="help-block"
+                        style="color: red;">
+                        {{ hasError['firstName'] }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="form-group has-default">
+                      <div class="input-group">
+                        <div class="input-group-prepend"></div>
+                        <input type="text" name="last_name" id="last_name" formControlName="lastName"
+                          [(ngModel)]="registrationModel.user.lastName" class="form-control" placeholder="Last Name" />
+                      </div>
+                      <div *ngIf="submitted && f.lastName.errors" class="help-block" style="color: red;">
+                        <div *ngIf="f.lastName.errors.required">
+                          Last name is required
+                        </div>
+                      </div>
+                      <div *ngIf="submitted && hasError.hasOwnProperty('lastName')" class="help-block"
+                        style="color: red;">
+                        {{ hasError['lastName'] }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="form-group has-default">
+                      <div class="input-group">
+                        <div class="input-group-prepend"></div>
+                        <mat-form-field>
+                          <input type="text" placeholder="Select Country Code" aria-label="Select Country Code" matInput
+                            [(ngModel)]="countryObject" (ngModelChange)="countryObject=$event; changeCountry($event)"
+                            (blur)="countryBlur()" formControlName="countryCode" [matAutocomplete]="auto" />
+                          <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                            <mat-option *ngFor="let code of filteredOptions | async | orderBy:'name'" [value]="code">
+                              {{code.name}}
+                            </mat-option>
+                          </mat-autocomplete>
+                        </mat-form-field>
+                      </div>
+                      <div *ngIf="submitted && !this.selectedCountry" class="help-block" style="color: red;">
+                        Country Code is required
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="form-group has-default mt-4">
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text" id="basic-phone">{{ selectedCountry }}</span>
+                        </div>
+                        <input type="text" name="phone" formControlName="phone" style="padding-left: 5px;"
+                          [(ngModel)]="registrationModel.user.phone.phoneNumber" id="phone" class="form-control"
+                          maxlength="10" placeholder="Phone Number" aria-label="Phone Number"
+                          aria-describedby="basic-phone" />
+                      </div>
+                      <div *ngIf="submitted && f.phone.errors" class="help-block" style="color: red;">
+                        <div *ngIf="f.phone.errors.required">
+                          Phone No. is required
+                        </div>
+                        <div *ngIf="f.phone.errors.pattern">
+                          Phone No. is not valid
+                        </div>
+                      </div>
+                      <div *ngIf="submitted && hasError.hasOwnProperty('phone')" class="help-block" style="color: red;">
+                        {{ hasError['phone'] }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="form-group has-default">
+                      <div class="input-group">
+                        <div class="input-group-prepend"></div>
+                        <input type="email" name="email" id="email" formControlName="email"
+                          [(ngModel)]="registrationModel.user.email" class="form-control" placeholder="Email Address" />
+                      </div>
+                      <div *ngIf="submitted && f.email.errors" class="help-block" style="color: red;">
+                        <div *ngIf="f.email.errors.required">
+                          Email is required
+                        </div>
+                        <div *ngIf="f.email.errors.pattern">
+                          Email is not valid
+                        </div>
+                        <div *ngIf="f.email.errors.emailExists">
+                          This email is already taken. Please choose another
+                          email.
+                        </div>
+                      </div>
+                      <div *ngIf="submitted && hasError.hasOwnProperty('email')" class="help-block" style="color: red;">
+                        {{ hasError['email'] }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="form-group has-default">
+                      <div class="input-group">
+                        <div class="input-group-prepend"></div>
+                        <input type="text" name="access_code" id="access_code" formControlName="accessCode"
+                          [(ngModel)]="registrationModel.user.accessCode" class="form-control" placeholder="Access Code" />
+                      </div>
+                      <div *ngIf="submitted && f.accessCode.errors" class="help-block" style="color: red;">
+                        <div *ngIf="f.accessCode.errors.required">
+                          Access Code is required, if you do not have one. Please contact <a href="mailto:support@automationhq.ai">AHQ Support</a>  
+                        </div>
+                      </div>
+                      <div *ngIf="submitted && hasError.hasOwnProperty('accessCode')" class="help-block"
+                        style="color: red;">
+                        {{ hasError['accessCode'] }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <div class="form-check">
+                      <label class="form-check-label">
+                        <input checked class="form-check-input" formControlName="termsAccepted" type="checkbox"
+                          [(ngModel)]="registrationModel.user.termsAccepted" value="" />
+                        <span class="form-check-sign">
+                          <span class="check"></span></span>
+                        I read and agreed to the 
+                        <a href="http://www.automationhq.ai/T&C.html" target="_blank">Terms & Conditions</a>
+                      </label>
+                      <div *ngIf="submitted && f.termsAccepted.errors" class="help-block"
+                        style="color: red; margin-top: 8px; margin-left: 8px;">
+                        <div *ngIf="f.termsAccepted.errors.required">
+                          Terms and conditions is required
+                        </div>
+                      </div>
+                      <div *ngIf="submitted && hasError.hasOwnProperty('termsAccepted')" class="help-block"
+                        style="color: red;">
+                        {{ hasError['termsAccepted'] }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div class="card-footer d-flex justify-content-center align-items-center">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-check mt-3 mb-3">
+                    <button (click)="register()" [disabled]="submitted && registrationForm.invalid" mat-raised-button
+                      class="btn btn-rose">
+                      Agree & Sign Up
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

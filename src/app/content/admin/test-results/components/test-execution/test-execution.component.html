@@ -1,0 +1,167 @@
+<div class="test-execution-wrapper p-0">
+  <div class="container-fluid p-0">
+    <div class="row">
+      <div class="col-md align-items-center align-right">
+        <button class="btn btn-primary mr-3 p-2" (click)="manualRefresh()">
+          Refresh
+          <!--<i class="material-icons" aria-label="refresh">refresh</i> -->
+        </button>
+        <div class="togglebutton">
+          <label>
+            <input type="checkbox" [(ngModel)]="isAutoRefresh">
+            <span class="toggle"></span>
+            Auto Refresh in 30 Sec
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="customScroll-contentScroll list-contentScroll">
+      <mat-table class="consolidated-executions-table" [dataSource]="consolidatedExecutions" multiTemplateDataRows
+        matSort matSortActive="executionName" matSortDirection="asc" matSortDisableClear>
+
+        <ng-container matColumnDef="executionName">
+          <mat-header-cell *matHeaderCellDef [ngClass]="'custom-executionName'">Test Run Name</mat-header-cell>
+          <mat-cell class="name-cell p-0" *matCellDef="let consolidatedExecution" [ngClass]="'custom-executionName'">
+            <a class="left-arrow btn btn-link btn-primary btn-just-icon"
+              [ngClass]="{'show-up-arrow':expandedConsolidatedExecution === consolidatedExecution}"
+              (click)="expandedConsolidatedExecution = expandedConsolidatedExecution === consolidatedExecution ? null : consolidatedExecution"
+              matTooltip="{{consolidatedExecution.executionName}}">
+              <i class="material-icons fw-600" aria-label="Show Test Scripts">keyboard_arrow_down</i>
+              <!-- <span class="custom-executionTitle">{{consolidatedExecution.testBotName}}</span> -->
+              <!-- <span class="custom-executionTitle">{{consolidatedExecution.backgroundJobStatus}}</span> -->
+              <!-- <i *ngIf="consolidatedExecution.backgroundJobStatus === 'SUCCEEDED'"
+                class="material-icons succeeded exstatus-color" >task_alt</i>
+              <i *ngIf="consolidatedExecution.backgroundJobStatus === 'DELETED'"
+                class="material-icons deleted exstatus-color">delete_forever</i>
+              <i *ngIf="consolidatedExecution.backgroundJobStatus === 'FAILED'"
+                class="material-icons failed exstatus-color">highlight_off</i>
+              <i *ngIf="consolidatedExecution.backgroundJobStatus === 'ENQUEUED'"
+                class="material-icons enqueued exstatus-color">hourglass_top</i>
+              <i *ngIf="consolidatedExecution.backgroundJobStatus === 'PROCESSING'"
+                class="material-icons processing exstatus-color">update</i> -->
+              <span class="custom-executionTitle">{{consolidatedExecution.executionName}}</span>
+            </a>
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="progress">
+          <mat-header-cell *matHeaderCellDef [ngClass]="'custom-status'">Results</mat-header-cell>
+          <mat-cell class="name-cell" *matCellDef="let consolidatedExecution" [ngClass]="'custom-status'">
+            <div class="custom-badge" *ngIf="consolidatedExecution.progress">
+              <span class="badge badge-info line" matTooltip="Total">{{consolidatedExecution.progress.total}}</span>
+              <span class="badge badge-success line" matTooltip="Passed">{{consolidatedExecution.progress.passed}}</span>
+              <span class="badge badge-danger line" matTooltip="Failed">{{consolidatedExecution.progress.failed}}</span>
+              <span class="badge badge-warning line" matTooltip="Skipped">{{consolidatedExecution.progress.skipped}}</span>
+            </div>
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="executionTime">
+          <mat-header-cell *matHeaderCellDef [ngClass]="'execution-date'">Execution Time</mat-header-cell>
+          <mat-cell *matCellDef="let consolidatedExecution" [ngClass]="'custom-date'">
+            <div>
+              <!-- <span class="material-icons material-icons-outlined orange-time">watch_later</span> -->
+              {{consolidatedExecution.startTime | datesDiff:consolidatedExecution.endTime}}
+            </div>
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="backgroundJobStatus">
+          <mat-header-cell *matHeaderCellDef [ngClass]="'background-job-status'">Execution Status</mat-header-cell>
+          <mat-cell *matCellDef="let consolidatedExecution" [ngClass]="'background-job-status'">
+            <div>
+              <!-- {{consolidatedExecution.backgroundJobStatus}} -->
+              <span class="badge badge-success line" *ngIf="consolidatedExecution.backgroundJobStatus === 'SUCCEEDED'">
+                <i class="material-icons succeeded exstatus-color">task_alt</i> <span class="">Succeeded</span></span>
+              <span class="badge badge-deleted line" *ngIf="consolidatedExecution.backgroundJobStatus === 'DELETED'">
+                <i class="material-icons deleted exstatus-color">delete_forever</i><span>Deleted</span></span>
+              <span class="badge badge-danger line" *ngIf="consolidatedExecution.backgroundJobStatus === 'FAILED'">
+                <i class="material-icons failed exstatus-color">highlight_off</i><span>Failed</span></span>
+              <span class="badge badge-enqueued line" *ngIf="consolidatedExecution.backgroundJobStatus === 'ENQUEUED'">
+                <i class="material-icons enqueued exstatus-color">hourglass_top</i><span>Enqueued</span></span>
+              <span class="badge badge-warning line customAnimation" *ngIf="consolidatedExecution.backgroundJobStatus === 'PROCESSING'">
+                <i class="material-icons processing exstatus-color">autorenew</i> <span>Processing</span></span>
+                
+            </div>
+          </mat-cell>
+        </ng-container>
+
+        <!-- <ng-container matColumnDef="startTime">
+          <mat-header-cell *matHeaderCellDef [ngClass]="'custom-date'">Start Date</mat-header-cell>
+          <mat-cell *matCellDef="let consolidatedExecution" [ngClass]="'custom-date'">
+            {{consolidatedExecution.startTime | date:'medium'}}
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="endTime">
+          <mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="'custom-date'">End Date</mat-header-cell>
+          <mat-cell *matCellDef="let consolidatedExecution" [ngClass]="'custom-date'">
+            {{consolidatedExecution.endTime | date:'medium'}}
+          </mat-cell>
+        </ng-container> -->
+
+        <ng-container matColumnDef="createdBy">
+          <mat-header-cell *matHeaderCellDef [ngClass]="'custom-createdby'">Executed By</mat-header-cell>
+          <mat-cell *matCellDef="let consolidatedExecution" [ngClass]="'custom-createdby'">
+            <div class="d-block"> {{consolidatedExecution.createdBy?.firstName}} {{consolidatedExecution.createdBy?.lastName}} </div>
+            <div class="d-block config-date-txt">{{consolidatedExecution.startTime | date:'medium'}}</div>
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="expandedDetail">
+          <mat-cell *matCellDef="let consolidatedExecution" [attr.colspan]="displayedColumns.length">
+            <div class="element-detail w-100"
+              [@detailExpand]="consolidatedExecution == expandedConsolidatedExecution ? 'expanded' : 'collapsed'">
+              <mat-table class="test-suite-results-table" [dataSource]="consolidatedExecution.testSuiteResults" matSort
+                matSortActive="testSuiteName" matSortDirection="asc" matSortDisableClear>
+
+                <ng-container matColumnDef="testSuiteName">
+                  <mat-header-cell class="testsuite-nametable" *matHeaderCellDef mat-sort-header>Test Suite Name
+                  </mat-header-cell>
+                  <mat-cell class="testsuite-nametable description-cell name-cell link-purple"
+                    *matCellDef="let testSuiteResult">
+                    <a (click)="openTestSuiteResultDialog(testSuiteResult, consolidatedExecution.executionConfiguration)"
+                      matTooltip="Show Test Suite Result">
+                      {{testSuiteResult.testSuiteName}}
+                    </a>
+                  </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="progress">
+                  <mat-header-cell class="testsuite-statustable" *matHeaderCellDef mat-sort-header>Status
+                  </mat-header-cell>
+                  <mat-cell class="testsuite-statustable description-cell name-cell custom-badge"
+                    *matCellDef="let testSuiteResult">
+                    <span class="badge badge-success line" matTooltip="Passed">{{testSuiteResult.progress.passed}}</span>
+                    <span class="badge badge-danger line" matTooltip="Failed">{{testSuiteResult.progress.failed}}</span>
+                    <span class="badge badge-warning line" matTooltip="Skipped">{{testSuiteResult.progress.skipped}}</span>
+                  </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedTSColumns"></mat-header-row>
+
+                <mat-row *matRowDef="let row; columns: displayedTSColumns;" class="element-row"></mat-row>
+
+              </mat-table>
+            </div>
+          </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <div class="mat-group">
+          <mat-row *matRowDef="let row; columns: displayedColumns;" class="element-row"
+            [class.expanded-row]="expandedConsolidatedExecution === row">
+          </mat-row>
+
+          <mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row"></mat-row>
+        </div>
+      </mat-table>
+    </div>
+    <div class="no-results" [style.display]="resultsLength == 0 ? '' : 'none'">
+      No results
+    </div>
+    <div class="pagination">
+      <mat-paginator [length]="resultsLength" [pageSize]="10" [pageSizeOptions]="[10, 20, 50]"></mat-paginator>
+    </div>
+  </div>
+</div>

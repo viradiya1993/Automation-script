@@ -1,0 +1,30 @@
+<div (click)="$event.stopPropagation()">
+	<form [formGroup]="userScriptForm">
+		<div mat-dialog-content>
+			<h3 class="text-center py-3"><b>Custome Parameter</b></h3>
+		</div>
+		<mat-form-field appearance="fill">
+			<mat-label>Name</mat-label>
+			<input matInput placeholder="Name" formControlName="parmsName" autocomplete="off"/>
+		</mat-form-field>
+        <mat-form-field  appearance="fill">   
+            <mat-label>Type</mat-label>
+            <mat-select formControlName="paramsType" placeholder="Type" >
+                <mat-option value="STRING">String</mat-option>
+                <mat-option value="INTEGER">Integer</mat-option>
+                <mat-option value="FLOAT">Float</mat-option>
+                <mat-option value="LONG">Long</mat-option>
+                <mat-option (click)="AddCustomeParams()">Custom Parameter...</mat-option>
+            </mat-select>
+        </mat-form-field>
+	</form>
+
+	<div class="d-flex justify-content-end">
+		<button mat-raised-button class="btn btn-primary" (click)="onSaveParams()" [disabled]="userScriptForm.invalid">
+			Save
+		</button>
+		<button mat-button (click)="onCancelClick()">
+			Cancel
+		</button>
+	</div>
+</div>

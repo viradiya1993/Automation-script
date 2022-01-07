@@ -1,0 +1,228 @@
+<div class="allusers-grp">
+  <div class="row">
+    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12" readonly>
+      <mat-form-field appearance="fill">
+        <mat-label>Name</mat-label>
+        <input matInput placeholder="Name" [value]="project?.projectName" />
+        <!-- {{project?.description}} -->
+      </mat-form-field>
+    </div>
+
+    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+      <mat-form-field appearance="fill">
+        <mat-label>Description</mat-label>
+        <input
+          matInput
+          placeholder="Description"
+          [value]="project?.description"
+          readonly
+        />
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+      <div class="mat-cell">
+        Created By:
+        {{
+          project?.createdBy?.firstName
+            ? project?.createdBy?.firstName
+            : "User not available"
+        }}
+      </div>
+      <div class="mat-cell" *ngIf="project.createdDate != null">
+        ({{ project?.createdDate | date: "medium" }})
+      </div>
+      <div class="mat-cell" *ngIf="project.createdDate == null">
+        ({{ "Created Date not available" }})
+      </div>
+    </div>
+    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+      <div class="mat-cell">
+        Updated By:
+        {{
+          project?.updatedBy?.firstName
+            ? project?.updatedBy?.firstName
+            : "User not available"
+        }}
+      </div>
+      <div class="mat-cell" *ngIf="project.updatedDate != null">
+        ({{ project?.updatedDate | date: "medium" }})
+      </div>
+      <div class="mat-cell" *ngIf="project.updatedDate == null">
+        ({{ "Updated Date not available" }})
+      </div>
+    </div>
+  </div>
+  <div class="expansion-list">
+    <div *ngFor="let user of users">
+      <div class="testscriptlist-row row" *ngIf="user.email">
+        <div class="col-md-4">
+          <div class="testscript-name">
+            {{ user.firstName ? user.firstName + " " : "" }}
+            {{ user.lastName ? user.lastName : " " }}
+          </div>
+          <div class="testscript-email">
+            {{ user.email }}
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="testscript-status">
+            <div
+              [ngClass]="user.active ? 'badge bg-success' : 'badge bg-danger'"
+              *ngIf="user.confirmed"
+            >
+              {{ user.active ? "Enabled" : "Disabled" }}
+            </div>
+            <div class="badge bg-info" *ngIf="!user.confirmed && user.invited">
+              Invited
+            </div>
+          </div>
+          <div class="testscript-lastActivity">
+            {{ user.lastActivity }}
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="testscript-role">
+            {{ user?.role?.roleName }}
+            <button
+              mat-icon
+              class="btn btn-primary btn-link text-capitalize p-0"
+              #editRoleUserFormMatTrigger="matMenuTrigger"
+              [matMenuTriggerFor]="editRoleUserForm"
+              matTooltip="Edit User Role"
+            >
+              <i class="material-icons">edit</i>
+            </button>
+            <mat-menu
+              #editRoleUserForm="matMenu"
+              [hasBackdrop]="false"
+              Position="before"
+              class="add-story-form mat-menu-form"
+            >
+              <app-user-role-form
+                [mat-menu-prevent]
+                [user]="user"
+                [roles]="roles"
+                (closeMenu)="editRoleUserFormMatTrigger.closeMenu()"
+              ></app-user-role-form>
+            </mat-menu>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="testscript-project">
+            {{ user?.project?.projectName }}
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="d-flex justify-content-around align-items-center">
+            <div *ngIf="user.confirmed">
+              <mat-slide-toggle
+                color="primary"
+                [checked]="user.active"
+                (change)="updateUserStatus(user, $event)"
+              >
+              </mat-slide-toggle>
+            </div>
+            <div *ngIf="!user.confirmed && user.invited">
+              <a
+                class="
+                  btn btn-link btn-primary btn-just-icon
+                  custom-btn-icon
+                  ml-2
+                "
+                matTooltip="Resend Invitation User"
+                (click)="resendInvitationUser(user)"
+              >
+                <mat-icon>refresh</mat-icon>
+              </a>
+            </div>
+            <a
+              class="
+                btn btn-link btn-primary btn-just-icon
+                custom-btn-icon
+                ml-2
+              "
+              matTooltip="Delete User"
+              (click)="setUserToRemove(user)"
+              data-toggle="modal"
+              data-target="#removeUserConfirmation"
+            >
+              <mat-icon>delete</mat-icon>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="
+        testscriptlist-row
+        d-flex
+        justify-content-between
+        align-items-center
+      "
+      *ngIf="users.length === 0"
+    >
+      <h4>No users</h4>
+    </div>
+  </div>
+</div>
+
+<!-- Start Pagination -->
+<div class="pagination">
+  <mat-paginator
+    [length]="totalElements"
+    [pageSize]="pageNumber"
+    [pageSizeOptions]="[10, 20, 50]"
+    (page)="pageChange($event)"
+  >
+  </mat-paginator>
+</div>
+<!-- End Pagination -->
+
+<div
+  class="modal fade modal-mini modal-primary deleteModal-dialog"
+  id="removeUserConfirmation"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="popupframe-title">
+          <div class="mat-dialog-title">
+            <h2>Delete User</h2>
+          </div>
+        </div>
+      </div>
+      <div class="modal-body m-0 pt-3">
+        <p>
+          Are you sure you want to remove
+          {{ deleteUserInfo ? deleteUserInfo.email : "" }} from this project?
+        </p>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button
+          mat-raised-button
+          class="btn btn-primary mr-2"
+          type="button"
+          (click)="deleteUser()"
+          data-dismiss="modal"
+        >
+          Yes
+          <div class="ripple-container"></div>
+        </button>
+        <button
+          mat-raised-button
+          type="button"
+          class="btn btn-primary-outline"
+          data-dismiss="modal"
+        >
+          No
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

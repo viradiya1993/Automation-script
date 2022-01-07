@@ -1,0 +1,63 @@
+<div class="add-story">
+  <button *ngIf="!linkBtn && !editIconBtn" mat-stroked-button class="btn btn-primary btn-link text-capitalize mr-2"
+    #storyFormMatTrigger="matMenuTrigger" [matMenuTriggerFor]="storyFormMenu">
+    <i class="material-icons">add</i> Add Story
+  </button>
+  <!-- <a *ngIf="editIconBtn" class="btn btn-link btn-primary btn-just-icon custom-btn-icon ml-2"
+    #storyFormMatTrigger="matMenuTrigger" [matMenuTriggerFor]="storyFormMenu" matTooltip="Edit Story"
+    (menuOpened)="setStoryForEdit()">
+    <i class="material-icons" aria-label="Edit Story">edit</i> 
+    <span>Edit</span>
+  </a> -->
+  <button mat-menu-item class="custom-matmenu" *ngIf="editIconBtn" #storyFormMatTrigger="matMenuTrigger" [matMenuTriggerFor]="storyFormMenu" matTooltip="Edit Story"
+  (menuOpened)="setStoryForEdit()" [mat-menu-prevent]>
+    <mat-ico class="material-icons custom-btn-icon mr-1" aria-label="Edit Epic">edit</mat-ico>
+    <span>Edit</span>
+  </button>
+
+  <button *ngIf="linkBtn" mat-flat-button class="btn btn-primary btn-link text-capitalize"
+    #storyFormMatTrigger="matMenuTrigger" [matMenuTriggerFor]="storyFormMenu">
+    Add Story
+  </button>
+
+  <mat-menu #storyFormMenu="matMenu" xPosition="before" [hasBackdrop]="false" (closed)="reset()"
+    class="add-story-form mat-menu-form">
+    <div (click)="$event.stopPropagation()">
+      <form [formGroup]="storyForm" class="row">
+        <mat-form-field *ngIf="!filterService.appliedFilter.epic && !editIconBtn" class="col-md-12" appearance="fill">
+          <mat-label>Select Epic</mat-label>
+          <input matInput placeholder="Select Epic" aria-label="Epic" [matAutocomplete]="auto"
+            [formControl]="searchEpicsCtrl" />
+          <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn.bind(this)"
+            (optionSelected)="getSelectedEpic($event.option.value)">
+            <mat-option *ngIf="isLoading" class="is-loading">Loading...</mat-option>
+            <ng-container *ngIf="!isLoading">
+              <mat-option *ngFor="let epic of epics" [value]="epic">
+                {{ epic.name }}
+              </mat-option>
+            </ng-container>
+          </mat-autocomplete>
+        </mat-form-field>
+
+        <mat-form-field class="col-md-12" appearance="fill">
+          <mat-label>Story Name</mat-label>
+          <input matInput placeholder="Story Name" formControlName="name" />
+        </mat-form-field>
+        <!-- <mat-form-field class="col-md-12">
+          <textarea matInput rows="3" cols="50" placeholder="Summary" formControlName="summary"></textarea>
+        </mat-form-field> -->
+      </form>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="d-flex justify-content-end">
+            <button mat-raised-button class="btn btn-primary" [disabled]="!storyForm.valid"
+              (click)="onStorySaveClick()">
+              Save
+            </button>
+            <button mat-button (click)="onStoryCancelClick()">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-menu>
+</div>

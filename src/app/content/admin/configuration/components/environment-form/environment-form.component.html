@@ -1,0 +1,23 @@
+<h2 mat-dialog-title>Environment</h2>
+<mat-dialog-content>
+  <form [formGroup]="environmentForm">
+    <div class="row">
+      <mat-form-field class="col-md-12" appearance="fill">
+        <mat-label>Name</mat-label>
+        <input matInput placeholder="Name" formControlName="name">
+      </mat-form-field>
+    </div>
+    <div class="row">
+      <mat-form-field class="col-md-12" appearance="fill">
+        <mat-label>URL</mat-label>
+        <input matInput placeholder="URL" formControlName="value">
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-raised-button class="btn btn-primary m-2" [disabled]="!environmentForm.valid" [mat-dialog-close]="true"
+    (click)="onEnvironmentSaveClick();">Save</button>
+  <button mat-raised-button class="btn btn-plain m-2" mat-dialog-close
+    (click)="onEnvironmentCancelClick();">Cancel</button>
+</mat-dialog-actions>

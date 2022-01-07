@@ -1,0 +1,90 @@
+<h2 mat-dialog-title *ngIf="!projectInfo.id" style="text-align: center">
+  Add Project Information
+</h2>
+<h2 mat-dialog-title *ngIf="projectInfo.id" style="text-align: center">
+  Edit Project Information
+</h2>
+<mat-dialog-content class="mat-typography">
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-12 ml-auto mr-auto">
+        <form role="form" [formGroup]="projectInfoForm" novalidate>
+          <div class="form-group has-default">
+            <div class="input-group">
+              <div class="input-group-prepend"></div>
+              <input
+                type="text"
+                name="projectName"
+                id="projectName"
+                formControlName="projectName"
+                [(ngModel)]="projectInfo.projectName"
+                class="form-control input-sm"
+                placeholder="Project Name"
+              />
+            </div>
+            <div
+              *ngIf="submitted && f.projectName.errors"
+              class="help-block"
+              style="color: red"
+            >
+              <div *ngIf="f.projectName.errors.required">
+                Project Name is required
+              </div>
+            </div>
+          </div>
+          <div class="form-group has-default">
+            <div class="input-group">
+              <div class="input-group-prepend"></div>
+              <input
+                type="text"
+                name="description"
+                id="description"
+                formControlName="description"
+                [(ngModel)]="projectInfo.description"
+                class="form-control input-sm"
+                placeholder="Description"
+              />
+            </div>
+            <div
+              *ngIf="submitted && f.description.errors"
+              class="help-block"
+              style="color: red"
+            >
+              <div *ngIf="f.description.errors.required">
+                Description is required
+              </div>
+            </div>
+          </div>
+          <div class="form-group has-default">
+            <div class="input-group">
+              <div class="input-group-prepend"></div>
+              <mat-slide-toggle
+                [(ngModel)]="projectInfo.isEnabled"
+                name="isEnabled"
+                id="isEnabled"
+                formControlName="isEnabled"
+              >
+                {{ projectInfo.isEnabled ? 'Enabled' : 'Disabled' }}
+              </mat-slide-toggle>
+            </div>
+            <div
+              *ngIf="submitted && f.isEnabled.errors"
+              class="help-block"
+              style="color: red"
+            >
+              <div *ngIf="f.isEnabled.errors.required">
+                Is Enabled is required
+              </div>
+            </div>
+          </div>
+          <mat-dialog-actions align="end">
+            <button class="btn btn-default" mat-dialog-close>Cancel</button>
+            <button class="btn btn-primary" cdkFocusInitial (click)="submit()">
+              save
+            </button>
+          </mat-dialog-actions>
+        </form>
+      </div>
+    </div>
+  </div>
+</mat-dialog-content>

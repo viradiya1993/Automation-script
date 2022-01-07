@@ -1,0 +1,9 @@
+.mat-chip {
+  white-space: nowrap;
+  span {
+    // width: 100px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+}

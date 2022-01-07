@@ -1,0 +1,27 @@
+<h2 mat-dialog-title>Test Bot Execution</h2>
+<mat-dialog-content>
+  <form [formGroup]="testBotExecutionForm">
+    <div class="row">
+      <mat-form-field class="col-md-12">
+        <input matInput placeholder="Name" formControlName="name" />
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button
+    mat-raised-button
+    class="btn btn-primary m-2"
+    [disabled]="!testBotExecutionForm.valid"
+    (click)="onExecuteTestBotClick()"
+  >
+    Execute
+  </button>
+  <button
+    mat-raised-button
+    class="btn btn-plain m-2"
+    mat-dialog-close
+  >
+    Cancel
+  </button>
+</mat-dialog-actions>

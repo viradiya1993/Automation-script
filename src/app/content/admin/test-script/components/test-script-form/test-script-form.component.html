@@ -1,0 +1,346 @@
+<div class="popupframe-title">
+  <div class="d-flex justify-content-between">
+    <div mat-dialog-title class="mt-3">
+      <h2>Test Script</h2>
+    </div>
+    <div class="rightpopup-section mr-3">
+      <button mat-raised-button class="btn btn-primary mr-2"
+        [disabled]="!testScriptForm.valid || isStatusAHQRecommended" (click)="onTestScriptSaveClick(true);"
+        [mat-dialog-close]="true">
+        Save & Run
+      </button>
+      <button mat-raised-button class="btn btn-primary mr-2"
+        [disabled]="!testScriptForm.valid || isStatusAHQRecommended" (click)="onTestScriptSaveClick();"
+        [mat-dialog-close]="true">
+        Save
+      </button>
+      <button mat-raised-button class="btn btn-plain" (click)="onTestScriptCancelClick();" mat-dialog-close>
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>
+<mat-dialog-content class="test-script-form-content">
+  <form [formGroup]="testScriptForm">
+    <div class="testscript-topform">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="row">
+            <div class="col-md-12">
+              <mat-form-field appearance="fill">
+                <mat-label>Name</mat-label>
+                <input matInput placeholder="Name" formControlName="name" />
+              </mat-form-field>
+            </div>
+
+            <div class="col-md-12">
+              <mat-form-field appearance="fill">
+                <mat-label>Description</mat-label>
+                <textarea matInput rows="3" cols="50" placeholder="Description"
+                  formControlName="description"></textarea>
+              </mat-form-field>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="row">
+            <div class="col-md-6">
+              <mat-form-field appearance="fill" class="custom-dropdownselect">
+                <mat-label>
+                  Status
+                  <mat-icon *ngIf="isStatusAHQRecommended" color="warn">error</mat-icon>
+                </mat-label>
+                <mat-select formControlName="status">
+                  <mat-option value="Not Started">Not Started</mat-option>
+                  <mat-option value="In Progress">In Progress</mat-option>
+                  <mat-option value="Ready">Ready</mat-option>
+                  <mat-option value="To Be Repaired">To Be Repaired</mat-option>
+                  <mat-option value="On Hold">On Hold</mat-option>
+                  <mat-option value="To Be Repaired (AHQ Rec)" [disabled]="true">
+                    To Be Repaired (AHQ Rec)
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+
+            </div>
+
+            <div class="col-md-6">
+              <mat-form-field appearance="fill" class="custom-dropdownselect">
+                <mat-label>Application</mat-label>
+                <mat-select formControlName="websiteId">
+                  <mat-option *ngFor="let website of websites" [value]="website.websiteId">
+                    {{website.name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div class="col-md-12">
+              <mat-form-field appearance="fill" *ngIf="!storyId && !testScriptId">
+                <input matInput placeholder="Select Story" aria-label="Story" [matAutocomplete]="auto"
+                  [formControl]="searchStoriesCtrl">
+                <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn.bind(this)"
+                  (optionSelected)='getSelectedStory($event.option.value)'>
+                  <mat-option *ngIf="isLoading" class="is-loading">Loading...</mat-option>
+                  <ng-container *ngIf="!isLoading">
+                    <mat-optgroup *ngFor="let epic of epics" [label]="epic.name">
+                      <mat-option *ngFor="let story of epic.stories" [value]="story">
+                        {{story.name}}
+                      </mat-option>
+                    </mat-optgroup>
+                  </ng-container>
+                </mat-autocomplete>
+              </mat-form-field>
+            </div>
+
+            <div class="col-md-12">
+              <mat-form-field appearance="fill" class="custom-tagfield">
+                <mat-label>Tag</mat-label>
+                <mat-chip-list #tagChipList>
+                  <mat-chip *ngFor="let tag of tags" [removable]="true" (removed)="onRemoveTag(tag)">
+                    {{tag}}
+                    <mat-icon matChipRemove>cancel</mat-icon>
+                  </mat-chip>
+                  <input placeholder="Tags" [matChipInputFor]="tagChipList"
+                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="true"
+                    (matChipInputTokenEnd)="addTag($event)" />
+                </mat-chip-list>
+              </mat-form-field>
+            </div>
+
+            <div *ngIf="testScript" class="col-md-6">
+              <div class="mat-cell">Created By: {{testScript?.createdBy?.firstName ? testScript?.createdBy?.firstName:
+                'User not available'}}</div>
+              <div class="mat-cell" *ngIf="testScript.createdDate != null">({{testScript?.createdDate | date:'medium'}})
+              </div>
+              <div class="mat-cell" *ngIf="testScript.createdDate == null">({{'Created Date not available'}})</div>
+            </div>
+            <div *ngIf="testScript" class="col-md-6">
+              <div class="mat-cell">Updated By: {{testScript?.updatedBy?.firstName ? testScript?.updatedBy?.firstName:
+                'User not available'}}
+              </div>
+              <div class="mat-cell" *ngIf="testScript.updatedDate != null">({{testScript?.updatedDate | date:'medium'}})
+              </div>
+              <div class="mat-cell" *ngIf="testScript.updatedDate == null">({{'Updated Date not available'}})</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr />
+    <!-- Drag Start-->
+    <div class="testscript-middleform mb-4">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="row">
+            <div class="col-md-8">
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="popupframe-title">
+                  <div mat-dialog-title class="mt-3">
+                    <h2>Test Steps</h2>
+                  </div>
+                </div>
+                <span>Drag & Drop pre-defined test step from right panel</span>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="row">
+                <div class="col-md-8">
+                  <mat-form-field class="custom-serachfield">
+                    <span matPrefix>
+                      <mat-icon>search</mat-icon>
+                    </span>
+                    <!-- <mat-label>
+                    <mat-icon>search</mat-icon> Search predefined steps
+                  </mat-label> -->
+                    <input matInput type="text" placeholder="Search predefined steps"
+                      [ngModelOptions]="{standalone: true}" [(ngModel)]="searchTextPS" />
+                    <button mat-button *ngIf="searchTextPS" matSuffix mat-icon-button aria-label="Clear"
+                      (click)="searchTextPS=''">
+                      <mat-icon>close</mat-icon>
+                    </button>
+                  </mat-form-field>
+                </div>
+                <div class="col-md-4">
+                  <mat-form-field>
+                    <mat-label>Type</mat-label>
+                    <mat-select [ngModelOptions]="{standalone: true}" [(ngModel)]="selectTemplateType">
+                      <mat-option>None</mat-option>
+                      <mat-option *ngFor="let templateType of templateTypes" [value]="templateType">
+                        {{templateType}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-8">
+              <div id="test-steps-container" class="dragdrop-teststeps-container drag-drop-container">
+                <div formArrayName="testSteps" cdkDropList #testStepList="cdkDropList"
+                  [cdkDropListData]="getControls(testScriptForm, 'testSteps')" class="drag-drop-list"
+                  (cdkDropListDropped)="drop($event)">
+                  <div class="drag-drop-box flex-wrap"
+                    *ngFor="let testStep of getControls(testScriptForm, 'testSteps'); let i = index;" cdkDrag>
+                    <div class="d-flex justify-content-between w-100">
+                      <div class="teststeps-rowform">
+                        <div class="badge badge-primary">{{i + 1}}</div>
+                        <app-test-step-form class="teststeps-inputs" [testStepFG]="testStep" [pages]="pages"
+                          [columns]="getDataColumns()" [globalParameters]="globalParameters"
+                          (addColumnEvent)="addColumn($event)" (removeColumnEvent)="removeColumn($event)">
+                        </app-test-step-form>
+                      </div>
+                      <div class="teststep-delete">
+                        <a class="btn btn-link btn-primary btn-just-icon move-icon" (click)="deleteTestStep(i)"
+                          matTooltip="Delete Test Step">
+                          <i class="material-icons" aria-label="Delete TestSuite">delete</i>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div id="templates-container" class="dragdrop-teststeps-container drag-drop-container">
+                <div cdkDropList [cdkDropListConnectedTo]="[testStepList]"
+                  [cdkDropListData]="templates | templateFilter: {templateTitle: searchTextPS, type: selectTemplateType}"
+                  class="drag-drop-list" (cdkDropListDropped)="drop($event)">
+                  <div class="drag-drop-box testscripts-templatesrow"
+                    *ngFor="let template of templates | templateFilter: {templateTitle: searchTextPS, type: selectTemplateType};"
+                    cdkDrag>
+                    <span [innerHTML]="getDisplayTemplateTitle(template.templateTitle)"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Drag End-->
+  </form>
+  <!-- Table Start-->
+  <div class="testscript-bottomform">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="popupframe-title">
+          <div class="d-flex justify-content-between">
+            <div mat-dialog-title class="mt-3 mb-1">
+              <h2>DataTable</h2>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="datatable-container">
+          <div class="d-flex justify-content-between">
+            <div>
+              <button *ngIf="selection.selected.length" class="btn btn-primary btn-sm mt-0 mb-2"
+                (click)="deleteSelectedRow()">
+                <mat-ico class="material-icons custom-btn-icon mr-1">delete</mat-ico>
+                <span>Delete</span>
+              </button>
+            </div>
+            <div class="rightpopup-section m-0">
+              <button [disabled]="!(columnsToDisplay.length > 2)" mat-raised-button
+                class="btn btn-primary btn-sm mt-0 mb-2" (click)="onAddRow()">
+                <mat-ico class="material-icons custom-btn-icon mr-1">add</mat-ico>
+                <span>Add Row</span>
+              </button>
+
+              <button [disabled]="!(columnsToDisplay.length > 2)" class="btn btn-primary btn-sm mt-0 mb-2"
+                mat-raised-button [matMenuTriggerFor]="fileDownloadMenu">
+                <mat-ico class="material-icons custom-btn-icon mr-1">file_download</mat-ico>
+                <span>Export</span>
+              </button>
+              <mat-menu #fileDownloadMenu="matMenu" xPosition="before">
+                <button mat-menu-item
+                  (click)="dataTableExporter.exportTable('xlsx', {fileName:'data-table', sheet: 'data', Props: {Author: 'AutomationHQ'}})">Excel</button>
+                <button mat-menu-item
+                  (click)="dataTableExporter.exportTable('csv', {fileName:'data-table'})">Csv</button>
+                <!-- <button mat-menu-item
+                  (click)="dataTableExporter.exportTable('json', {fileName:'data-table'})">Json</button> -->
+              </mat-menu>
+
+              <label [ngClass]="{'btn btn-primary btn-sm mt-0 mb-2': true, 'disabled': !(columnsToDisplay.length > 2)}">
+                <mat-ico class="material-icons custom-btn-icon mr-1">file_upload</mat-ico>
+                <span>Import</span>
+                <input #inputImportFile [disabled]="!(columnsToDisplay.length > 2)" type="file" style="display: none;"
+                  (change)="onImportFileChange($event)"
+                  accept=".csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+              </label>
+
+            </div>
+          </div>
+          <table class="testscript-datatable border" mat-table matTableExporter [dataSource]="rowData"
+            #dataTableExporter="matTableExporter" [hiddenColumns]="[0,1]">
+            <ng-container [matColumnDef]="column" *ngFor="let column of columnsToDisplay">
+              <th class="header-datatable" mat-header-cell [sticky]="true" *matHeaderCellDef>
+                <div class="checkbox-grp" *ngIf="column === 'select_ahq_2021'">
+                  <mat-checkbox (change)="$event ? masterToggle() : null"
+                    [checked]="selection.hasValue() && isAllSelected()"
+                    [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
+                  </mat-checkbox>
+
+                </div>
+                <span *ngIf="column === 'action_ahq_2021'">action</span>
+                <span *ngIf="column !== 'action_ahq_2021' && column !== 'select_ahq_2021'">{{column}}</span>
+              </th>
+              <td mat-cell *matCellDef="let row">
+                <div class="checkbox-grp" *ngIf="column === 'select_ahq_2021'">
+                  <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                    [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+                  </mat-checkbox>
+                </div>
+                <div *ngIf="column !== 'action_ahq_2021' && column !== 'select_ahq_2021'">
+                  <ng-container *ngIf="!row.edit_ahq_2021">
+                    <p class="text-truncate">{{row[column]}} </p>
+                  </ng-container>
+                  <div class="data-field">
+                    <ng-container *ngIf="row.edit_ahq_2021">
+                      <mat-form-field>
+                        <input matInput placeholder="{{column}}" name="{{column}}" [(ngModel)]="row[column]">
+                      </mat-form-field>
+                    </ng-container>
+                  </div>
+                </div>
+                <div *ngIf="column === 'action_ahq_2021'">
+                  <ng-container *ngIf="!row.edit_ahq_2021">
+                    <button class="btn btn-link btn-primary btn-just-icon custom-btn-icon" (click)="editRow(row)">
+                      <i class="material-icons">edit</i>
+                    </button>
+                    <button class="btn btn-link btn-primary btn-just-icon custom-btn-icon ml-2"
+                      (click)="deleteRow(row)">
+                      <i class="material-icons">delete</i>
+                    </button>
+                  </ng-container>
+                  <ng-container *ngIf="row.edit_ahq_2021">
+                    <button class="btn btn-link btn-primary btn-just-icon custom-btn-icon" (click)="updateEdit(row)">
+                      <i class="material-icons">done</i>
+                    </button>
+                    <button class="btn btn-link btn-primary btn-just-icon custom-btn-icon ml-2"
+                      (click)="cancelEdit(row)">
+                      <i class="material-icons">close</i>
+                    </button>
+                  </ng-container>
+                </div>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="columnsToDisplay; sticky:true" class="header-bg"></tr>
+            <tr mat-row *matRowDef="let row; columns: columnsToDisplay;"></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Table End -->
+</mat-dialog-content>

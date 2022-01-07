@@ -1,0 +1,72 @@
+<div class="card custom-card height-100">
+  <div class="card-header">
+    <div class="d-flex justify-content-between">
+      <h4 class="card-title text-primary">Epics</h4>
+      <app-epic-form (epicSaveChange)="onEpicSaveChange()"></app-epic-form>
+    </div>
+  </div>
+  <div class="card-body listCol-scroll">
+    <div class="all-epic-row">
+      <div class="d-flex justify-content-between">
+        <span class="all-epic-title" (click)="showAllEpics()">All Epics</span>
+        <span class="badge badge-primary-light mr-4" matTooltip="Number of Epics">{{epics.length}}</span>
+      </div>
+    </div>
+    <mat-accordion class="list-contentScroll" *ngIf="epics.length > 0" [multi]="false">
+      <mat-expansion-panel class="expansion-list epics-list" *ngFor="let epic of epics" togglePosition='before' (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+        <mat-expansion-panel-header>
+          <mat-panel-title class="epic-header-title d-flex justify-content-between">
+            <div class="epic-title" (click)="selectedEpic(epic)" matTooltip="{{epic.name}}">{{epic.name}}</div>
+            <div class="epictitle-config d-flex justify-content-between align-items-center">
+              <span class="badge badge-primary-light" matTooltip="Number of Stories">{{epic.numberOfStories}}</span>
+              <button mat-icon-button class="btn btn-link btn-primary btn-just-icon custom-btn-icon ml-1"
+                [matMenuTriggerFor]="menu" aria-label="Epic More Menu">
+                <mat-icon class="material-icons">more_vert</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu" [hasBackdrop]="true">
+                <app-epic-form [epic]="epic" (epicSaveChange)="onEpicSaveChange()">Edit</app-epic-form>
+                <button mat-menu-item class="custom-matmenu" (click)="setEpicToRemove(epic)" data-toggle="modal"
+                  data-target="#removeEpicConfirmation" matTooltip="Delete Epic">
+                  <mat-icon class="custom-btn-icon mr-0">delete</mat-icon>
+                  <span>Delete</span>
+                </button>
+              </mat-menu>
+            </div>
+
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="epics-descrpt">{{epic.summary}}</div>
+      </mat-expansion-panel>
+    </mat-accordion>
+
+    <div class="font-italic ml-1 font-weight-light" *ngIf="epics.length === 0">
+      Please add Epics to get started
+    </div>
+  </div>
+</div>
+
+<div class="modal fade modal-mini modal-primary deleteModal-dialog" id="removeEpicConfirmation" tabindex="-1" role="dialog"
+  aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="popupframe-title">
+          <div class="mat-dialog-title">
+            <h2>Delete Epic</h2>
+          </div>
+        </div>
+      </div>
+      <div class="modal-body m-0 pt-3">
+        <p>Are you sure you want to delete {{epicToRemove ? epicToRemove.name: ''}} epic along with their
+          related stories and test scripts?</p>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button mat-raised-button class="btn btn-primary mr-2" type="button" (click)="removeEpic(epicToRemove)"
+          data-dismiss="modal">Yes
+          <div class="ripple-container"></div>
+        </button>
+        <button mat-raised-button type="button" class="btn btn-primary-outline" data-dismiss="modal">No</button>        
+      </div>
+    </div>
+  </div>
+</div>

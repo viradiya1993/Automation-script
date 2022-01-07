@@ -1,0 +1,37 @@
+<div class="add-epic">
+  <button *ngIf="!isEdit" mat-stroked-button class="btn btn-primary btn-link text-capitalize"
+    #epicFormMatTrigger="matMenuTrigger" [matMenuTriggerFor]="epicFormMenu">
+    <i class="material-icons">add</i> Add Epic
+  </button>
+  <button mat-menu-item *ngIf="isEdit" #epicFormMatTrigger="matMenuTrigger" class="custom-matmenu"
+    [matMenuTriggerFor]="epicFormMenu" matTooltip="Edit Epic" (menuOpened)="setEpicForEdit()" [mat-menu-prevent]>
+    <mat-ico class="material-icons custom-btn-icon mr-1" aria-label="Edit Epic">edit</mat-ico>
+    <span>Edit</span>
+  </button>
+
+  <mat-menu #epicFormMenu="matMenu" [hasBackdrop]="false" xPosition="before" (closed)="epicForm.reset()"
+    class="add-epic-form mat-menu-form">
+    <div (click)="$event.stopPropagation()">
+      <form [formGroup]="epicForm" class="row">
+        <mat-form-field class="col-md-12" appearance="fill">
+          <mat-label>Name</mat-label>
+          <input matInput placeholder="Name" formControlName="name" />
+        </mat-form-field>
+        <mat-form-field class="col-md-12" appearance="fill">
+          <mat-label>Summary</mat-label>
+          <textarea matInput rows="3" cols="50" placeholder="Summary" formControlName="summary"></textarea>
+        </mat-form-field>
+      </form>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="d-flex justify-content-end">
+            <button mat-raised-button class="btn btn-primary" [disabled]="!epicForm.valid" (click)="onEpicSaveClick()">
+              Save
+            </button>
+            <button mat-button (click)="onEpicCancelClick()">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-menu>
+</div>

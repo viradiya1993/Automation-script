@@ -1,0 +1,25 @@
+<div (click)="$event.stopPropagation()">
+  <!-- <h4 class="mat-title pb-3">Invite User</h4> -->
+
+  <form [formGroup]="userForm" novalidate>
+    <mat-form-field class="email-list" appearance="fill">
+      <mat-label>Email Address</mat-label>
+      <mat-chip-list #chipList aria-label="Email selection">
+        <mat-chip *ngFor="let email of emails" [selectable]="selectable" [removable]="removable"
+          (removed)="remove(email)">
+          {{ email }}
+          <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+        </mat-chip>
+        <input placeholder="email address..." #emailInput formControlName="emailCtrl" [matChipInputFor]="chipList"
+          [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (matChipInputTokenEnd)="add($event)"
+          (blur)="addBlur($event)" [empty]="false" [addOnBlur]="false" />
+      </mat-chip-list>
+    </mat-form-field>
+  </form>
+
+  <div class="d-flex justify-content-end">
+    <button mat-raised-button class="btn btn-primary" [disabled]="!userForm.valid"
+      (click)="saveUserInfo()">Send</button>
+    <button mat-button (click)="onUserCancel()">Cancel</button>
+  </div>
+</div>

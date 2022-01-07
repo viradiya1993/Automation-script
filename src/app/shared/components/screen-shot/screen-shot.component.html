@@ -1,0 +1,24 @@
+<div class="popupframe-title">
+    <div class="d-flex justify-content-between">
+        <div mat-dialog-title>
+            <div class="d-flex align-items-center mb-2">
+                <h2 *ngIf="title">{{title}}</h2>
+            </div>
+        </div>
+        <div class="rightpopup-section">
+            <button mat-button mat-dialog-close class="btn-popupClose"><span
+                    class="material-icons">close</span></button>
+        </div>
+    </div>
+</div>
+<div class="popup-dialog-content">
+    <div *ngIf="details" class="row">
+        <div class="col-md">{{details}}</div>
+    </div>
+
+    <div class="row">
+        <div class="col-md">
+            <img src="{{screenShotLink}}" width="100%" height="100%">
+        </div>
+    </div>
+</div>

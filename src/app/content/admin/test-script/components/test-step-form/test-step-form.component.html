@@ -1,0 +1,174 @@
+<div [formGroup]="testStepFG" class="hide-nonempty-labels">
+  <div formGroupName="params">
+    <div *ngFor="let keyword of keywords" [ngSwitch]="keyword" class="d-inline-flex">
+
+      <mat-form-field formGroupName="number" class="p-1" *ngSwitchCase="'{{number}}'">
+        <mat-chip-list #chipNumberList>
+          <mat-chip class="step-chip" *ngFor="let number of numbers" [removable]="removable"
+            (removed)="remove('number', number)">
+            {{number}}
+            <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+          </mat-chip>
+          <input #number formControlName="value" placeholder="number" [matAutocomplete]="auto"
+            [matChipInputFor]="chipNumberList" [matChipInputAddOnBlur]="addOnBlur"
+            (matChipInputTokenEnd)="add($event, 'number')" />
+        </mat-chip-list>
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event, 'number')">
+          <mat-option *ngFor="let nameValuePair of filteredNameValuePairs" [value]="nameValuePair.value">
+            {{ nameValuePair.name }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+
+      <mat-form-field formGroupName="text" class="p-1" *ngSwitchCase="'{{text}}'">
+        <mat-chip-list #chipTextList>
+          <mat-chip class="step-chip" *ngFor="let text of texts" [removable]="removable"
+            (removed)="remove('text', text)">
+            {{text}}
+            <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+          </mat-chip>
+          <input #text formControlName="value" placeholder="text" [matAutocomplete]="auto"
+            [matChipInputFor]="chipTextList" [matChipInputAddOnBlur]="addOnBlur"
+            (matChipInputTokenEnd)="add($event, 'text')" />
+        </mat-chip-list>
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event, 'text')">
+          <mat-option *ngFor="let nameValuePair of filteredNameValuePairs" [value]="nameValuePair.value">
+            {{ nameValuePair.name }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+
+      <mat-form-field formGroupName="password" class="p-1" *ngSwitchCase="'{{password}}'">
+        <mat-chip-list #chipPasswordList>
+          <mat-chip class="step-chip" *ngFor="let password of passwords" [removable]="removable"
+            (removed)="remove('password', password)">
+            <div *ngFor="let number of password.split('')">
+              *
+            </div>
+            <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+          </mat-chip>
+          <input #password formControlName="value" type="password" placeholder="password" [matAutocomplete]="auto"
+            [matChipInputFor]="chipPasswordList" [matChipInputAddOnBlur]="addOnBlur"
+            (matChipInputTokenEnd)="add($event, 'password')" />
+        </mat-chip-list>
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event, 'password')">
+          <mat-option *ngFor="let nameValuePair of filteredNameValuePairs" [value]="nameValuePair.value">
+            {{ nameValuePair.name }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+
+      <mat-form-field formGroupName="variable" class="p-1" *ngSwitchCase="'{{variable}}'">
+        <mat-chip-list #chipVariableList>
+          <mat-chip class="step-chip" *ngFor="let variable of variables" [removable]="removable"
+            (removed)="remove('variable', variable)">
+            {{variable}}
+            <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+          </mat-chip>
+          <input #variable formControlName="value" placeholder="variable" [matAutocomplete]="auto"
+            [matChipInputFor]="chipVariableList" [matChipInputAddOnBlur]="addOnBlur"
+            (matChipInputTokenEnd)="add($event, 'variable')" />
+        </mat-chip-list>
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event, 'variable')">
+          <mat-option *ngFor="let nameValuePair of filteredNameValuePairs" [value]="nameValuePair.value">
+            {{ nameValuePair.name }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+
+      <mat-form-field formGroupName="cookie" class="p-1" *ngSwitchCase="'{{cookie}}'">
+        <mat-chip-list #chipCookieList>
+          <mat-chip class="step-chip" *ngFor="let cookie of cookies" [removable]="removable"
+            (removed)="remove('cookie', cookie)">
+            {{cookie}}
+            <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+          </mat-chip>
+          <input #cookie formControlName="value" placeholder="cookie" [matAutocomplete]="auto"
+            [matChipInputFor]="chipCookieList" [matChipInputAddOnBlur]="addOnBlur"
+            (matChipInputTokenEnd)="add($event, 'cookie')" />
+        </mat-chip-list>
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event, 'cookie')">
+          <mat-option *ngFor="let nameValuePair of filteredNameValuePairs" [value]="nameValuePair.value">
+            {{ nameValuePair.name }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+
+      <mat-form-field formGroupName="expected" class="p-1" *ngSwitchCase="'{{expected}}'">
+        <mat-chip-list #chipExpectedList>
+          <mat-chip class="step-chip" *ngFor="let expected of expecteds" [removable]="removable"
+            (removed)="remove('expected', expected)">
+            {{expected}}
+            <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+          </mat-chip>
+          <input #expected formControlName="value" placeholder="expected" [matAutocomplete]="auto"
+            [matChipInputFor]="chipExpectedList" [matChipInputAddOnBlur]="addOnBlur"
+            (matChipInputTokenEnd)="add($event, 'expected')" />
+        </mat-chip-list>
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event, 'expected')">
+          <mat-option *ngFor="let nameValuePair of filteredNameValuePairs" [value]="nameValuePair.value">
+            {{ nameValuePair.name }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+
+      <div formGroupName="uiTable" *ngSwitchCase="'{{ui-table}}'">
+        <mat-form-field style="width: 200px;" class="p-1" *ngIf="show">
+          <mat-label>ui-table</mat-label>
+          <mat-select formControlName="locatorId">
+            <mat-optgroup *ngFor="let page of pages" [label]="page.pageName">
+              <button mat-icon-button [matMenuTriggerFor]="menuuitable" aria-label="Example icon-button with a menu">
+                <mat-icon>arrow_drop_down</mat-icon>
+              </button>
+              <mat-menu #menuuitable="matMenu">
+                <button mat-menu-item (click)="addLocator(page, $event)">Add Locator</button>
+                <button mat-menu-item (click)="addPage(page, $event)">Add Page</button>
+              </mat-menu>
+              <div class="custom-panel">
+                <mat-option *ngFor="let locator of page.locators" (click)="setPageId('uiTable', page.pageId)"
+                  [value]="locator.locatorId">
+                  {{locator.locatorName}}
+                </mat-option>
+              </div>
+            </mat-optgroup>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div formGroupName="uiLocator" *ngSwitchCase="'{{ui-locator}}'">
+        <mat-form-field style="width: 200px;" class="p-1" *ngIf="show">
+          <mat-label>ui-locator</mat-label>
+          <mat-select [class.selected-deleted-locator]="!paramsFG.controls['uiLocator'].get('locatorId').value"
+            formControlName="locatorId">
+            <mat-optgroup *ngFor="let page of pages" [label]="page.pageName">
+              <button mat-icon-button [matMenuTriggerFor]="menuuilocator" aria-label="Example icon-button with a menu">
+                <mat-icon>arrow_drop_down</mat-icon>
+              </button>
+              <mat-menu #menuuilocator="matMenu">
+                <button mat-menu-item (click)="addLocator(page, $event)">Add Locator</button>
+                <button mat-menu-item (click)="addPage(page, $event)">Add Page</button>
+              </mat-menu>
+              <div class="custom-panel">
+                <mat-option *ngFor="let locator of page.locators;" (click)="setPageId('uiLocator', page.pageId)"
+                  [value]="locator.locatorId" [disabled]="!locator.locatorId">
+                  <span [class.deleted-locator]="!locator.locatorId">
+                    {{locator.locatorName}}
+                  </span><br>
+                </mat-option>
+              </div>
+            </mat-optgroup>
+          </mat-select>
+        </mat-form-field>
+        <small class="text-danger" *ngIf="isDeleted('uiLocator')">The locator used in this step has been deleted, please
+          correct this step to repair your script</small>
+      </div>
+
+      <div *ngSwitchCase="'{{file}}'">
+        <input type="file" (change)="uploadFileEvt($event)" />
+        <a *ngIf="fileValuePair.fileId" target="_blank" href="{{fileValuePair.url}}">{{fileValuePair.name}}</a>
+      </div>
+
+      <div class="p-1" *ngSwitchDefault>{{keyword}}</div>
+    </div>
+  </div>
+</div>

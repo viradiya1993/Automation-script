@@ -1,0 +1,39 @@
+<div class="filterList-grp">
+  <div class="d-flex justify-content-start">
+    <div>
+      <mat-chip-list class="primary-chip">
+        <mat-chip class="primary-box" *ngIf="appliedFilter.release" (removed)="removeFilter('release')">
+          Release: {{appliedFilter.release.name}}
+          <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+        <mat-chip class="primary-box" *ngIf="appliedFilter.hasFailedTests" (removed)="removeFilter('hasFailedTests')">
+          Has Failed Tests
+          <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+        <mat-chip class="primary-box" *ngIf="appliedFilter.noPassedTests" (removed)="removeFilter('noPassedTests')">
+          No Passed Tests
+          <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+        <mat-chip class="primary-box" *ngIf="appliedFilter.hasSkippedTests" (removed)="removeFilter('hasSkippedTests')">
+          Has Skipped Tests
+          <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+        <!-- <mat-chip class="primary-box" *ngIf="isFilterApplied" (removed)="removeFilter('clearAll')">
+          Clear Filters
+          <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip> -->
+      </mat-chip-list>
+    </div>
+    <div>
+      <button mat-flat-button class="btn btn-primary btn-link text-capitalize mt-1" *ngIf="isFilterApplied"
+        (click)="removeFilter('clearAll')">
+        <medium>
+          <span class="mat-button-wrapper">
+            <i class="material-icons">close</i>
+          </span>
+          Clear filters
+        </medium>
+      </button>
+    </div>
+  </div>
+</div>

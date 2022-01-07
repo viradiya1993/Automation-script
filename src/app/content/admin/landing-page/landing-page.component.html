@@ -1,0 +1,131 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12 d-none">
+        <div class="frame-wrapper">
+          <div class="frame-element">
+            <a class="btn btn-link btn-primary down-arrow show-up-arrow" [ngClass]="{ 'show-up-arrow': toggleFrame1 }"
+              (click)="toggleFrame1 = !toggleFrame1">
+              <h2 class="m-0">
+                Shortcuts
+                <span><i class="material-icons fw-600" aria-label="Show Test Scripts">keyboard_arrow_down</i></span>
+              </h2>
+            </a>
+            <div class="frame-content" *ngIf="toggleFrame1">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="frame-wrapper">
+          <div class="frame-element">
+            <a class="btn btn-link btn-primary down-arrow show-up-arrow" [ngClass]="{ 'show-up-arrow': toggleFrame2 }"
+              (click)="toggleFrame2 = !toggleFrame2">
+              <h2 class="m-0">
+                Actions
+                <span><i class="material-icons fw-600" aria-label="Show Test Scripts">keyboard_arrow_down</i></span>
+              </h2>
+            </a>
+            <div class="frame-content pt-0" *ngIf="toggleFrame2">
+              <div class="frame-text">Do you want to create a new Project?
+                <a mat-flat-button class="btn btn-primary btn-link text-capitalize p-1"
+                  [routerLink]="'/projects-and-users'" [queryParams]="{ project: true }">
+                  <i class="material-icons">add</i> Add Project
+                </a>
+              </div>
+              <div class="mt-2 mb-2">
+                <ul class="external-links" *ngIf="subscriberRole.indexOf(userRole?.roleId) !== -1">
+                  <li class="mr-3">
+                    <a mat-button class="btn btn-primary btn-link text-capitalize pl-3 pr-3"
+                      [routerLink]="'/projects-and-users'" [queryParams]="{ invite: true }">
+                      <i class="material-icons">contact_page</i> Invite New User
+                    </a>
+                  </li>
+                  <li>
+                    <a mat-button class="btn btn-primary btn-link text-capitalize pl-3 pr-3"
+                      [routerLink]="'/projects-and-users'" [queryParams]="{ project: true }">
+                      <i class="material-icons">post_add</i> Create New Project
+                    </a>
+                  </li>
+                </ul>
+
+                <ul *ngIf="userRole?.roleId === testerRole">
+                  <li>
+                    <a [routerLink]="'#'">Record Element</a>
+                  </li>
+                  <li><a [routerLink]="'/test-script'">Create New EPIC</a></li>
+                  <li><a [routerLink]="'/test-script'">Create New Story</a></li>
+                  <li>
+                    <a [routerLink]="'/test-script'">Create New Test Script</a>
+                  </li>
+                </ul>
+
+                <ul *ngIf="userRole?.roleId === qaManagerRole">
+                  <li>
+                    <a [routerLink]="'/operational-dashboard'">Review Analytics</a>
+                  </li>
+                  <li><a [routerLink]="'/releases'">Review Release Status</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="frame-wrapper">
+          <div class="frame-element">
+            <a class="btn btn-link btn-primary down-arrow show-up-arrow" [ngClass]="{ 'show-up-arrow': toggleFrame3 }"
+              (click)="toggleFrame3 = !toggleFrame3">
+              <h2 class="m-0">
+                AHQ Knowledge
+                <span><i class="material-icons fw-600" aria-label="Show Test Scripts">keyboard_arrow_down</i></span>
+              </h2>
+            </a>
+            <div class="frame-content" *ngIf="toggleFrame3">
+              <div class="row ahq-video-wrapper">
+                <div class="col-4">
+                  <a class="ahq-video-item" (click)="
+                      openVideoDialog(
+                        'https://www.youtube.com/embed/IVHWK_ThFu8?rel=0&amp;autoplay=1'
+                      )
+                    ">
+                    <img src="/assets/img/Overview-demo-pic.png" alt="" />
+                    <img src="/assets/img/Overview-demo-pic.png" alt="" />
+                  </a>
+                </div>
+                <div class="col-4">
+                  <a class="ahq-video-item" (click)="
+                      openVideoDialog(
+                        'https://www.youtube.com/embed/E58eyhy0_mY?rel=0&amp;autoplay=1'
+                      )
+                    ">
+                    <span>
+                      <img src="/assets/img/TestScript-demo-pic.png" alt="" />
+                      <img src="/assets/img/TestScript-demo-pic.png" alt="" />
+                    </span>
+                  </a>
+                </div>
+                <div class="col-4">
+                  <a class="ahq-video-item" (click)="
+                      openVideoDialog(
+                        'https://www.youtube.com/embed/n31v1IXEzMc?rel=0&amp;autoplay=1'
+                      )
+                    ">
+                    <span>
+                      <img src="/assets/img/Rolebased-demo-pic.png" alt="" />
+                      <img src="/assets/img/Rolebased-demo-pic.png" alt="" />
+                    </span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End: Frames -->
+
+    <div></div>
+  </div>
+</div>
+<div class="glass"></div>

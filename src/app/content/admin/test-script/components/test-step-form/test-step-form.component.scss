@@ -1,0 +1,22 @@
+.mat-select.selected-deleted-locator {
+  .mat-select-value {
+    text-decoration: line-through;
+  }
+}
+
+.deleted-locator {
+  text-decoration: line-through;
+}
+
+footer{
+  border-top:2px solid gray; 
+  height: 44px;
+  padding-top: 10px;
+  text-align:right;
+}
+
+.custom-panel {
+  max-height: 200px; // mat-select-panel height = 256px. 200 + 10 + 44 + 2
+  overflow: auto;
+}
+

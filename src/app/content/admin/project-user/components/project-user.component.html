@@ -1,0 +1,104 @@
+<div class="main-content" (click)="dashboardClick()">
+  <div class="col-md-12" *ngIf="userAddError.length > 0">
+    <div class="alert alert-success alert-mt-10">
+      <button aria-label="Close" class="close mat-button" mat-button="" type="button">
+        <span class="mat-button-wrapper" (click)="closeInfoMsg()"><i class="material-icons">close</i></span>
+        <div class="mat-button-ripple mat-ripple" matripple=""></div>
+        <div class="mat-button-focus-overlay"></div>
+      </button>
+      <span [innerText]="userAddError"></span>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-3">
+        <app-project-list></app-project-list>
+      </div>
+      <div class="col-md-9">
+        <div class="card custom-card mt-0 height-100">
+          <div class="card-header">
+            <div class="d-flex justify-content-between">
+              <div class="d-flex justify-content-between align-items-start">
+                <mat-button-toggle-group class="tabs-btns" #group="matButtonToggleGroup" [(ngModel)]="showList"
+                  (ngModelChange)="modelChangeShowList($event)">
+                  <mat-button-toggle value="users" *ngIf="selectedProject" class="primary">
+                    Assigned Users
+                  </mat-button-toggle>
+                  <mat-button-toggle value="all-users" *ngIf="!selectedProject" class="primary">
+                    <span>
+                      All Users
+                    </span>
+                  </mat-button-toggle>
+                  <mat-button-toggle value="available-users" *ngIf="selectedProject" class="primary">
+                    <span>
+                      Available Users
+                    </span>
+                  </mat-button-toggle>
+                </mat-button-toggle-group>
+              </div>
+              <div class="d-flex justify-content-between align-items-end">
+                <div *ngIf="selectedProject">
+                  <button mat-stroked-button class="btn btn-primary btn-link text-capitalize mr-2"
+                    #assignUserFormMatTrigger="matMenuTrigger" [matMenuTriggerFor]="assignUserForm"
+                    matTooltip="Assign User">
+                    <i class="material-icons">group_add</i> Assign User
+                  </button>
+                  <mat-menu #assignUserForm="matMenu" [hasBackdrop]="false" Position="before"
+                    class="add-edit-form mat-menu-form">
+                    <app-assign-user [mat-menu-prevent] [projectInput]="selectedProject" [roleList]="roles"
+                      (closeMenu)="assignUserFormMatTrigger.closeMenu()"></app-assign-user>
+                  </mat-menu>
+                </div>
+                <button mat-stroked-button class="btn btn-primary btn-link text-capitalize mr-2"
+                  #inviteUserFormMatTrigger="matMenuTrigger" [matMenuTriggerFor]="inviteUserForm"
+                  matTooltip="Invite User">
+                  <i class="material-icons">add</i> Invite User
+                </button>
+                <mat-menu #inviteUserForm="matMenu" [hasBackdrop]="false" Position="before"
+                  class="add-story-form mat-menu-form">
+                  <app-user-form [mat-menu-prevent] (closeMenu)="inviteUserFormMatTrigger.closeMenu()"></app-user-form>
+                </mat-menu>
+                
+                <button mat-stroked-button class="btn btn-primary btn-link text-capitalize"
+                  #filterFormMatTrigger="matMenuTrigger" [matMenuTriggerFor]="filterMenu">
+                  <i class="material-icons">filter_alt</i> Filter
+                </button>
+                <mat-menu #filterMenu="matMenu" xPosition="before" [hasBackdrop]="false"
+                  class="filter-mat-menu-form mat-menu-form">
+                  <div (click)="$event.stopPropagation()">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <mat-form-field appearance="fill">
+                          <input matInput name="name" placeholder="Name" />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="d-flex justify-content-end">
+                          <button mat-raised-button class="btn btn-primary" (click)="applyFilter()">
+                            Filter
+                          </button>
+                          <button mat-button (click)="onFilterCancelClick()">Cancel</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </mat-menu>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <app-project-filter></app-project-filter>
+            <app-users-list *ngIf="showList === 'users' && selectedProject" [projectInput]="selectedProject">
+            </app-users-list>
+            <app-non-users-list *ngIf="showList === 'all-users'"></app-non-users-list>
+            <app-available-users-list *ngIf="showList === 'available-users' && selectedProject"
+              [projectInput]="selectedProject">
+            </app-available-users-list>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

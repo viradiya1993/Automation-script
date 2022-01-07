@@ -1,0 +1,120 @@
+<div class="expand-collapse-btn d-flex justify-content-end" *ngIf="stories.length > 0">
+  <button mat-button class="btn btn-primary btn-link text-capitalize m-0 p-1" (click)="toggle()">
+    <i class="material-icons">list</i> Expand / Collapse All
+  </button>
+</div>
+
+<mat-accordion class="customScroll-contentScroll list-contentScroll" *ngIf="stories.length > 0" [multi]="true">
+  <mat-expansion-panel class="expansion-list story-list" *ngFor="let story of stories; let i = index"
+    togglePosition="before" [expanded]="expanded || filterService.storyExpands[i]"
+    (closed)="filterService.storyExpands[i]=false" (opened)="filterService.storyExpands[i]=true">
+    <mat-expansion-panel-header>
+      <mat-panel-title class="d-flex justify-content-between story-header-title">
+        <div>
+          <div *ngIf="story.epic" class="badge badge-rose-light mr-2" matTooltip="{{ story.epic.name }}">
+            E
+          </div>
+          <span class="story-name">{{ story.name }}</span>
+        </div>
+        <div class="d-flex justify-content-between">
+          <span class="badge badge-primary-light" matTooltip="Number of TestScripts">{{ story.numberOfTestScripts
+            }}</span>
+
+          <button mat-icon-button class="btn btn-link btn-primary btn-just-icon custom-btn-icon ml-1"
+            [matMenuTriggerFor]="menu" aria-label="Story More Menu">
+            <mat-icon class="material-icons">more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <app-story-form [story]="{ epicId: story.epic.epicId, storyId: story.storyId, name: story.name }"
+              [editIconBtn]="true">Edit</app-story-form>
+            <button mat-menu-item class="custom-matmenu" (click)="setStoryToRemove(story)" data-toggle="modal"
+              data-target="#removeStoryConfirmation" matTooltip="Delete Story">
+              <mat-icon class="custom-btn-icon mr-0">delete</mat-icon>
+              <span>Delete</span>
+            </button>
+          </mat-menu>
+          <!-- <div>
+            <app-story-form [story]="{
+                epicId: story.epic.epicId,
+                storyId: story.storyId,
+                name: story.name
+              }" [editIconBtn]="true"></app-story-form>
+          </div>
+          <div>
+            <a class="
+                btn btn-link btn-primary btn-just-icon
+                custom-btn-icon
+                ml-2
+              " (click)="setStoryToRemove(story)" data-toggle="modal" data-target="#removeStoryConfirmation"
+              matTooltip="Delete Story">
+              <mat-icon>delete</mat-icon>
+            </a>
+          </div> -->
+        </div>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <p *ngIf="story.summary">{{ story.summary }}</p>
+    <ng-template matExpansionPanelContent>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="storyscript-grp">
+            <app-test-script-list [storyId]="story.storyId" [story]="story" [testScripts]="story.testScripts">
+            </app-test-script-list>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </mat-expansion-panel>
+</mat-accordion>
+
+<!-- <app-story-form *ngIf="stories.length > 0" [linkBtn]="true"></app-story-form> -->
+<div class="testscriptlist-row p-1" *ngIf="stories.length === 0">
+  <div class="font-italic ml-2 font-weight-light d-flex justify-content-start" >
+    <!-- Please<button mat-flat-button 
+    class="btn btn-primary btn-link text-capitalize mt-1"
+    (click)="dialogService.openStoryDialog()">
+    Add Story
+    </button>to get started -->
+    <div class="no-avaliable-text">Please</div>
+    <app-story-form [linkBtn]="true"></app-story-form>
+    <div class="no-avaliable-text">to get started</div>
+  </div>
+</div>
+<!-- Start Pagination -->
+<div class="pagination" *ngIf="stories.length > 0">
+  <mat-paginator [length]="totalElements" [pageSize]="10" [pageSizeOptions]="[10, 20, 50]" (page)="pageChange($event)">
+  </mat-paginator>
+</div>
+<!-- End Pagination -->
+
+<div class="modal fade modal-mini modal-primary deleteModal-dialog" id="removeStoryConfirmation" tabindex="-1" role="dialog"
+  aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="popupframe-title">
+          <div class="mat-dialog-title">
+            <h2>Delete Story</h2>
+          </div>
+        </div>
+      </div>
+      <div class="modal-body m-0 pt-3">
+        <p>
+          Are you sure you want to delete
+          {{ storyFilterViewToRemove?.name || "" }} story along with their
+          related test scripts?
+        </p>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button mat-raised-button class="btn btn-primary mr-2" type="button" (click)="removeStory(storyFilterViewToRemove)"
+          data-dismiss="modal">
+          Yes
+          <div class="ripple-container"></div>
+        </button>
+        <button mat-raised-button type="button" class="btn btn-primary-outline" data-dismiss="modal">
+          No
+        </button>        
+      </div>
+    </div>
+  </div>
+</div>

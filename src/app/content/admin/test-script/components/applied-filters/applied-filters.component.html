@@ -1,0 +1,51 @@
+<div class="filterList-grp">
+  <div class="d-flex justify-content-start">
+    <div>
+      <mat-chip-list class="primary-chip">
+        <mat-chip class="primary-box" *ngIf="appliedFilter.epic" (removed)="removeFilter('epic')"
+          [matTooltip]="appliedFilter.epic.name">
+          <span>Epic: {{ appliedFilter.epic.name }}</span>
+          <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+        <mat-chip class="primary-box" *ngIf="appliedFilter.website" (removed)="removeFilter('website')"
+          [matTooltip]="appliedFilter.website.name">
+          <span>Website: {{ appliedFilter.website.name }}</span>
+          <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+        <mat-chip class="primary-box" *ngIf="appliedFilter.name" (removed)="removeFilter('name')"
+          [matTooltip]="appliedFilter.name">
+          <span>{{
+            appliedFilter.showList === "stories" ? "Story" : "TestScript"
+            }}
+            Name: {{ appliedFilter.name }}</span>
+          <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+        <mat-chip class="primary-box" *ngIf="appliedFilter.tags.length" (removed)="removeFilter('tags')"
+          [matTooltip]="appliedFilter.tags">
+          <span>Tags: {{ appliedFilter.tags.join(", ") }}</span>
+          <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+        <mat-chip class="primary-box" *ngIf="appliedFilter.status" (removed)="removeFilter('status')"
+          [matTooltip]="appliedFilter.status">
+          <span>Status: {{ appliedFilter.status }}</span>
+          <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+        <!-- <mat-chip class="primary-box" *ngIf="isFilterApplied" (removed)="removeFilter('clearAll')">
+        Clear Filters
+        <mat-icon matChipRemove>cancel</mat-icon>
+      </mat-chip> -->
+      </mat-chip-list>
+    </div>
+    <div>
+      <button mat-flat-button class="btn btn-primary btn-link text-capitalize mt-1" *ngIf="isFilterApplied"
+        (click)="removeFilter('clearAll')">
+        <medium>
+          <span class="mat-button-wrapper">
+            <i class="material-icons">close</i>
+          </span>
+          Clear filters
+        </medium>
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,84 @@
+<div [ngClass]="{'main-content' : orgId === undefined}">
+  <div [ngClass]="{'container-fluid' : orgId === undefined}">
+    <div [ngClass]="{'row' : orgId === undefined}">
+      <div [ngClass]="{'col-md-12' : orgId === undefined}">
+        <div class="card">
+          <div class="card-header card-header-primary card-header-icon">
+            <div class="card-icon">
+              <i class="material-icons">assignment</i>
+            </div>
+            <h4 class="card-title text-primary"><b>Project Information</b></h4>
+            <button (click)="openDialog()" class="btn btn-primary pull-right">
+              Add Project
+            </button>
+          </div>
+          <div class="card-body">
+            <div class="toolbar">
+              <!--        Here you can write extra buttons/actions for the toolbar              -->
+            </div>
+            <div class="material-datatables">
+              <table mat-table [dataSource]="dataSource.data"
+                class="table table-striped table-no-bordered table-hover dataTable dtr-inline mat-elevation-z8"
+                style="width: 100%;" role="grid" aria-describedby="datatables_project">
+                <ng-container matColumnDef="projectName">
+                  <th mat-header-cell *matHeaderCellDef>Project Name</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{element.projectName}}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="description">
+                  <th mat-header-cell *matHeaderCellDef>Project Description</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{element.description}}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="isEnabled">
+                  <th mat-header-cell *matHeaderCellDef>Status</th>
+                  <td mat-cell *matCellDef="let element">
+                    <mat-slide-toggle [checked]="element.isEnabled" (change)="updateStatus($event, element.id)">
+                      {{ element.isEnabled ? 'Enabled' : 'Disabled' }}
+                    </mat-slide-toggle>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="actions">
+                  <th mat-header-cell *matHeaderCellDef></th>
+                  <td mat-cell *matCellDef="let element">
+                    <a class="btn btn-link btn-primary btn-just-icon" matTooltip="Users List"
+                      (click)="projectUser(element)">
+                      <i class="material-icons" aria-label="Users List">supervisor_account</i>
+                    </a>
+                    <a class="btn btn-link btn-primary btn-just-icon" matTooltip="Edit Project"
+                      (click)="editProject(element)">
+                      <i class="material-icons" aria-label="Edit Project">edit</i>
+                    </a>
+                    <a class="btn btn-link btn-primary btn-just-icon" matTooltip="Delete Project"
+                      (click)="deleteProject(element.id)">
+                      <i class="material-icons" aria-label="Delete Project">delete</i>
+                    </a>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="noRecord">
+                  <td mat-footer-cell *matFooterCellDef colspan="4">
+                    No records found.
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                <tr mat-footer-row *matFooterRowDef="['noRecord']"
+                  [ngClass]="{'d-none':!(dataSource.data!=null && dataSource.data.length==0)}"></tr>
+              </table>
+              <mat-paginator [length]="pageLength" [pageSize]="pageSize" [hidePageSize]="true"
+                [pageSizeOptions]="pageSizeOptions" (page)="pageEvent=$event; loadProjectPage($event)">
+              </mat-paginator>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

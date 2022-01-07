@@ -1,0 +1,43 @@
+<div (click)="$event.stopPropagation()">
+  <!-- <h4 class="mat-title pb-3">Assign User</h4> -->
+
+  <form [formGroup]="assignForm" novalidate>
+    <mat-form-field class="user-list" appearance="fill">
+      <mat-label>User</mat-label>
+      <mat-chip-list #chipList aria-label="User selection">
+        <mat-chip *ngFor="let user of users" [selectable]="selectable" [removable]="removable" (removed)="remove(user)">
+          {{ user.email }}
+          <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+        </mat-chip>
+        <input placeholder="user..." #userInput formControlName="userId" [matChipInputFor]="chipList"
+          [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (matChipInputTokenEnd)="add($event)"
+          [matAutocomplete]="auto" />
+        <mat-autocomplete class="list-contentScroll" #auto="matAutocomplete" (optionSelected)="selected($event)">
+          <mat-option *ngIf="isLoading" class="is-loading">Loading...</mat-option>
+          <mat-option *ngFor="let user of filteredUsers" [value]="user">
+            {{
+            user.firstName ? user.firstName + " " + user.lastName : user.email
+            }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-chip-list>
+    </mat-form-field>
+    <mat-form-field class="role-list" appearance="fill">
+      <mat-label>Role</mat-label>
+      <mat-select placeholder="Select Role" [(ngModel)]="selectedRole" formControlName="roleId">
+        <mat-option *ngFor="let role of roles" [value]="role.id">
+          {{ role.roleName }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <div *ngIf="submitted && f.roleId.errors" class="help-block" style="color: red">
+      <div *ngIf="f.roleId.errors.required">Role is required</div>
+    </div>
+  </form>
+
+  <div class="d-flex justify-content-end">
+    <button mat-raised-button class="btn btn-primary" [disabled]="!assignForm.valid"
+      (click)="saveAssignUser()">Save</button>
+    <button mat-button  (click)="onAssignUserCancel()">Cancel</button>
+  </div>
+</div>

@@ -1,0 +1,62 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-3 col-sm-6 align-middle" *ngIf="selectedProject">
+        <app-epic-list></app-epic-list>
+      </div>
+      <div class="col-md-9 col-sm-6 align-middle" *ngIf="selectedProject">
+        <div class="card custom-card height-100">
+          <div class="card-header">
+            <div class="d-flex justify-content-between">
+              <div class="d-flex justify-content-between align-items-start">
+                <mat-button-toggle-group class="tabs-btns" #group="matButtonToggleGroup" [(ngModel)]="showList"
+                  (ngModelChange)="modelChangeShowList($event)">
+                  <mat-button-toggle value="stories" class="primary">
+                    Stories
+                  </mat-button-toggle>
+                  <mat-button-toggle value="testScripts">
+                    Test Scripts
+                  </mat-button-toggle>
+                </mat-button-toggle-group>
+              </div>
+              <div class="d-flex justify-content-between align-items-end">
+                <app-story-form *ngIf="showList === 'stories'"></app-story-form>
+                <button *ngIf="showList === 'testScripts'" mat-stroked-button
+                  class="btn btn-primary btn-link text-capitalize mr-2" (click)="openTestScriptDialog()"
+                  matTooltip="Add Test Script">
+                  <i class="material-icons">add</i> Add Test Script
+                </button>
+                <!-- <a mat-stroked-button class="btn btn-primary btn-link text-capitalize" href="{{ downloadAgentLink }}">
+                  <span class="material-icons mr-1"> cloud_download </span> Test
+                  Executor Agent
+                </a> -->
+                  <button type="button"
+                    class="btn btn-primary btn-link text-capitalize dropdown-toggle dropdown-toggle-split"
+                    data-toggle="dropdown" mat-stroked-button aria-haspopup="true" aria-expanded="false">
+                    <span class="material-icons mr-1"> cloud_download </span> Test
+                    Executor Agent
+                  </button>
+                  <div class="dropdown-menu">
+                    <a class="dropdown-item" *ngFor="let agent of agents;let i = index" href="{{ agent.link }}"
+                      download="{{ agent.name }}">{{ agent.name }}</a>
+                  </div>
+                <div class="filter-list">
+                  <app-filter-form [websites]="websites"></app-filter-form>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <app-applied-filters></app-applied-filters>
+            <app-story-list *ngIf="showList === 'stories'"></app-story-list>
+            <app-test-script-list *ngIf="showList === 'testScripts'">
+            </app-test-script-list>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12" *ngIf="!selectedProject">
+        <p>Please select Project</p>
+      </div>
+    </div>
+  </div>
+</div>

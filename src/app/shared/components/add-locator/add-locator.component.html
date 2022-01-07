@@ -1,0 +1,50 @@
+<div (click)="$event.stopPropagation()">
+	<form [formGroup]="locatorFormGroup">
+		<div mat-dialog-content>
+			<h3 class="text-center py-3"><b>Add Locator</b></h3>
+		</div>
+		<mat-form-field appearance="fill">
+			<mat-label>Name</mat-label>
+			<input matInput placeholder="Name" formControlName="locatorName" autocomplete="off"/>
+		</mat-form-field>
+		<mat-form-field appearance="fill">
+			<mat-label>By</mat-label>
+			<mat-select formControlName="locateBy">
+				<mat-option value="ID">ID</mat-option>
+				<mat-option value="NAME">NAME</mat-option>
+				<mat-option value="XPATH">XPATH</mat-option>
+				<mat-option value="CSS">CSS</mat-option>
+				<mat-option value="CLASS">CLASS</mat-option>
+				<mat-option value="LINK_TEXT">LINK_TEXT</mat-option>
+				<mat-option value="PARTIAL_LINK_TEXT">PARTIAL_LINK_TEXT</mat-option>
+			</mat-select>
+		</mat-form-field>
+		<mat-form-field appearance="fill">
+			<mat-label>Type</mat-label>
+			<mat-select formControlName="locatorType">
+				<mat-option value="TEXTBOX">TEXTBOX</mat-option>
+				<mat-option value="BUTTON">BUTTON</mat-option>
+				<mat-option value="HYPERLINK">HYPERLINK</mat-option>
+				<mat-option value="STATIC_TEXT">STATIC_TEXT</mat-option>
+				<mat-option value="TABLE">TABLE</mat-option>
+				<mat-option value="DROP_DOWN">DROP_DOWN</mat-option>
+				<mat-option value="RADIO_BUTTON">RADIO_BUTTON</mat-option>
+				<mat-option value="CHECK_BOX">CHECK_BOX</mat-option>
+			</mat-select>
+		</mat-form-field>
+		
+		<mat-form-field appearance="fill">
+			<mat-label>Value</mat-label>
+			<input matInput placeholder="Value" formControlName="locatorValue"  matTooltip="locatorValue" autocomplete="off"/>
+		</mat-form-field>
+	</form>
+
+	<div class="d-flex justify-content-end">
+		<button mat-raised-button class="btn btn-primary" (click)="onSaveLocator()" [disabled]="locatorFormGroup.invalid">
+			Save
+		</button>
+		<button mat-button (click)="onCancelClick()">
+			Cancel
+		</button>
+	</div>
+</div>

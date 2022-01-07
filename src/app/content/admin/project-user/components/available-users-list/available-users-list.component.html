@@ -1,0 +1,91 @@
+<div class="allusers-grp">
+  <div class="expansion-list">
+    <div *ngFor="let user of users" class="testscriptlist-row">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="testscript-name">
+            {{ user.firstName ? user.firstName + " " : "" }}
+            {{ user.lastName ? user.lastName : " " }}
+          </div>
+          <div class="testscript-email">
+            {{ user.email }}
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="testscript-status">
+            <div [ngClass]="user.active ? 'badge bg-success' : 'badge bg-danger'" *ngIf="user.confirmEmail">
+              {{ user.active ? "Enabled" : "Disabled" }}
+            </div>
+            <div class="badge bg-info" *ngIf="!user.confirmEmail && user.invited">
+              Invited
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 d-flex justify-content-end">
+          <div *ngIf="user.confirmEmail">
+            <mat-slide-toggle color="primary" [checked]="user.active" (change)="updateUserStatus(user, $event)">
+            </mat-slide-toggle>
+          </div>
+          <div *ngIf="!user.confirmEmail && user.invited">
+            <a class="
+                btn btn-link btn-primary btn-just-icon
+                custom-btn-icon
+                ml-2
+              " matTooltip="Resend Invitation User" (click)="resendInvitationUser(user)">
+              <mat-icon>refresh</mat-icon>
+            </a>
+          </div>
+          <a class="btn btn-link btn-primary btn-just-icon custom-btn-icon ml-2" matTooltip="Delete User"
+            (click)="setUserToRemove(user)" data-toggle="modal" data-target="#removeUserConfirmation">
+            <mat-icon>delete</mat-icon>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="testscriptlist-row" *ngIf="users.length === 0">
+      <div class="row">
+        <div class="col-md-12">
+          <h4>No users</h4>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Start Pagination -->
+<div class="pagination">
+  <mat-paginator [length]="totalElements" [pageSize]="pageNumber" [pageSizeOptions]="[10, 20, 50]"
+    (page)="pageChange($event)">
+  </mat-paginator>
+</div>
+<!-- End Pagination -->
+
+<div class="modal fade modal-mini modal-primary deleteModal-dialog" id="removeUserConfirmation" tabindex="-1"
+  role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="popupframe-title">
+          <div class="mat-dialog-title">
+            <h2>Delete User</h2>
+          </div>
+        </div>
+      </div>
+      <div class="modal-body m-0 pt-3">
+        <p> Are you sure you want to delete
+          {{ deleteUserInfo ? deleteUserInfo.email : "" }} user? </p>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button mat-raised-button class="btn btn-primary mr-2" type="button" (click)="deleteUser()"
+          data-dismiss="modal">
+          Yes
+          <div class="ripple-container"></div>
+        </button>
+        <button mat-raised-button type="button" class="btn btn-primary-outline " data-dismiss="modal">
+          No
+        </button>
+
+      </div>
+    </div>
+  </div>
+</div>

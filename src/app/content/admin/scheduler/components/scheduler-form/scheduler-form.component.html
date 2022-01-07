@@ -1,0 +1,84 @@
+<div class="popupframe-title">
+	<div class="d-flex justify-content-between">
+		<div mat-dialog-title class="mt-3">
+			<h2>Scheduler</h2>
+		</div>
+		<div class="rightpopup-section mr-3">
+			<button mat-raised-button class="btn btn-primary mr-2" [disabled]="!schedulerForm.valid"
+				(click)="onSchedulerSaveClick()" [mat-dialog-close]="true">
+				Save
+			</button>
+			<button mat-raised-button class="btn btn-plain" (click)="onSchedulerCancelClick();" mat-dialog-close>
+				Cancel
+			</button>
+		</div>
+	</div>
+</div>
+<form [formGroup]="schedulerForm">
+	<div class="row">
+		<div class="col-md-6">
+			<mat-form-field appearance="fill">
+				<mat-label>Scheduler Name</mat-label>
+				<input matInput placeholder="Scheduler Name" formControlName="name" autocomplete="off" />
+			</mat-form-field>
+		</div>
+		<div class="col-md-6">
+			<mat-form-field appearance="fill">
+				<mat-label>Add Emails</mat-label>
+				<mat-chip-list #chipList formControlName="emails">
+					<mat-chip [color]="(email.emailArray)?'warn':''" selected
+						*ngFor="let email of schedulerForm.get('emails').value; let i=index" [selectable]="true"
+						[removable]="removable" (removed)="removeEmailAddress(email)" required name="chips">
+						{{ email }}
+						<mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+					</mat-chip>
+					<input placeholder="Add emails here" [matChipInputFor]="chipList" autocomplete="off"
+						[matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="true"
+						(matChipInputTokenEnd)="addEmailAddress($event)" [email]="true" (paste)="paste($event)">
+				</mat-chip-list>
+			</mat-form-field>
+
+			<mat-error *ngIf="f.emails.touched && f.emails.errors?.required">Please enter email.</mat-error>
+			<mat-error *ngIf="f.emails.touched && f.emails.errors?.emailArray">Please enter a valid email.</mat-error>
+			<mat-error *ngIf="f.emails.touched && f.emails.errors?.invalid">
+				Please enter valid emails to continue. For multiple emails
+				use spaces or semi-colon(;) or comma(,) in between
+			</mat-error>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<div class="scheduler-main">
+				<cron-editor formControlName="recurringRule" [options]="cronOptions"></cron-editor>
+			</div>
+		</div>
+	</div>
+	<!-- <mat-checkbox labelPosition="before" class="col-md-6" formControlName="active">Active</mat-checkbox> -->
+</form>
+
+<div class="col-md-12">
+	<div class="row">
+		<div class="col-md-6">
+			<div class="mat-cell" *ngIf="scheduler?.createdBy">Created By: {{scheduler?.createdBy?.firstName ?
+				scheduler?.createdBy?.firstName: ''}}</div>
+			<div class="mat-cell" *ngIf="scheduler?.createdDate">({{scheduler?.createdDate | date:'medium'}})</div>
+		</div>
+		<div class="col-md-6">
+			<div class="mat-cell" *ngIf="scheduler?.updatedBy">Updated By: {{scheduler?.updatedBy?.firstName ?
+				scheduler?.updatedBy?.firstName: ''}}</div>
+			<div class="mat-cell" *ngIf="scheduler?.updatedDate">({{scheduler?.updatedDate | date:'medium'}})</div>
+		</div>
+	</div>
+</div>
+
+<!-- <div class="row">
+    <div class="col-md-12">
+        <div class="d-flex justify-content-end">
+            <button mat-raised-button class="btn btn-primary" [disabled]="!schedulerForm.valid"
+                (click)="onSchedulerSaveClick()">
+                Save
+            </button>
+            <button mat-button (click)="onSchedulerCancelClick()">Cancel</button>
+        </div>
+    </div>
+</div> -->

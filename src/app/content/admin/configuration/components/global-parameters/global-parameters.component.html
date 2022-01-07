@@ -1,0 +1,128 @@
+<div class="card-header">
+  <h4 class="card-title text-primary">Global Parameters</h4>
+</div>
+<div class="card-body">
+  <form [formGroup]="globalParametersForm">
+    <div class="customScroll-contentScroll list-contentScroll globalParameter_wrapper">
+      <div class="row">
+        <div class="col-4">
+          <mat-form-field appearance="fill">
+            <mat-label>Base Url</mat-label>
+            <mat-select formControlName="baseUrl">
+              <mat-option *ngFor="let environment of environments" [value]="environment.environmentId">
+                {{ environment.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-4">
+          <mat-form-field appearance="fill">
+            <mat-label>Browser</mat-label>
+            <mat-select formControlName="browser">
+              <mat-option *ngFor="let browser of browsers" [value]="browser.browserId">
+                {{ browser.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-4">
+          <mat-form-field appearance="fill">
+            <mat-label>Grid Url</mat-label>
+            <mat-select formControlName="gridUrl">
+              <mat-option *ngFor="let grid of grids" [value]="grid.gridId">
+                {{ grid.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-4">
+          <mat-form-field appearance="fill">
+            <mat-label>Type</mat-label>
+            <input matInput placeholder="Type" formControlName="type" />
+          </mat-form-field>
+        </div>
+        <div class="col-4">
+          <mat-form-field appearance="fill">
+            <mat-label>Timeout</mat-label>
+            <input matInput placeholder="Timeout" formControlName="timeout" />
+          </mat-form-field>
+        </div>
+        <div class="col-4">
+          <mat-form-field appearance="fill">
+            <mat-label>Wait For Element Timeout</mat-label>
+            <input matInput placeholder="Wait For Element Timeout" formControlName="waitForElementTimeout" />
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row mt-3 mb-4">
+        <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12">
+          <div class="checkbox-grp mt-1 mb-1">
+            <mat-checkbox formControlName="screenshotAfterEachStep" [labelPosition]="'after'">
+              <span class="text-primary checkbox-label">Screenshot After Each Step</span>
+            </mat-checkbox>
+          </div>
+        </div>
+        <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12">
+          <div class="checkbox-grp mt-1 mb-1">
+            <mat-checkbox formControlName="screenshotOnError" [labelPosition]="'after'">
+              <span class="text-primary checkbox-label">Screenshot On Error</span>
+            </mat-checkbox>
+          </div>
+        </div>
+        <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12">
+          <div class="checkbox-grp mt-1 mb-1">
+            <mat-checkbox formControlName="screenshotOnFinish" [labelPosition]="'after'">
+              <span class="text-primary checkbox-label">Screenshot On Finish</span>
+            </mat-checkbox>
+          </div>
+        </div>
+        <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12">
+          <div class="checkbox-grp mt-1 mb-1">
+            <mat-checkbox formControlName="closeBrowserAfterEachExecution" [labelPosition]="'after'">
+              <span class="text-primary checkbox-label">Close Browser After Each Execution</span>
+            </mat-checkbox>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md pb-2 pt-2">
+          <h4>Custom Properties</h4>
+        </div>
+        <div class="col-md text-md-right">
+          <button mat-stroked-button class="btn btn-primary btn-link text-capitalize"
+            (click)="addCustomPropertyFG(undefined)">
+            <i class="material-icons">add</i>Add Custom Property
+          </button>
+        </div>
+      </div>
+      <mat-divider class="pb-2 pt-2"></mat-divider>
+      <div class="row">
+        <div class="col-md-12">
+          <div formArrayName="customProperties" *ngFor="let item of getCustomPropertiesFA().controls; let i = index">
+            <div [formGroupName]="i" class="row">
+              <mat-form-field appearance="fill" class="col-md">
+                <mat-label>Name</mat-label>
+                <input matInput placeholder="Name" formControlName="name" />
+              </mat-form-field>
+              <mat-form-field appearance="fill" class="col-md">
+                <mat-label>Value</mat-label>
+                <input matInput placeholder="Value" formControlName="value" />
+              </mat-form-field>
+              <button class="btn btn-link btn-primary btn-just-icon" (click)="removeCustomPropertyFG(i)">
+                <mat-icon class="custom-btn-icon mr-0">delete</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+  <div class="text-md-right">
+    <button mat-raised-button class="btn btn-primary m-2" [disabled]="!globalParametersForm.valid"
+      (click)="onGlobalParametersSaveClick()">
+      Save
+    </button>
+  </div>
+</div>

@@ -1,0 +1,78 @@
+<div class="card custom-card mt-0 height-100">
+  <div class="card-header">
+    <div class="d-flex justify-content-between">
+      <h4 class="card-title text-primary">Test Suites</h4>
+      <app-test-suite-form></app-test-suite-form>
+    </div>
+  </div>
+  <div class="card-body listCol-scroll">
+    <div class="all-test-suite-row">
+      <div class="d-flex justify-content-between">
+        <span class="all-test-suite-title">All Test Suites</span>
+        <span class="badge badge-primary-light mr-4" matTooltip="Number of Test Suites">{{ testSuites.length }}</span>
+      </div>
+    </div>
+    <mat-accordion class="list-contentScroll" *ngIf="testSuites.length > 0" [multi]="false">
+      <mat-expansion-panel class="expansion-list test-suites-list"
+        *ngFor="let testSuite of testSuites; first as isFirst" togglePosition="before" [expanded]="isFirst">
+        <mat-expansion-panel-header>
+          <mat-panel-title class="test-suite-header-title d-flex justify-content-between">
+            <div class="test-suite-title" (click)="selectedTestSuite(testSuite)" matTooltip="{{ testSuite.name }}">
+              {{ testSuite.name }}
+            </div>
+            <div class="d-flex justify-content-between align-items-center">
+              <button class="btn btn-link btn-primary btn-just-icon custom-btn-icon ml-1"
+                (click)="setTestSuiteToRemove(testSuite)" data-toggle="modal" data-target="#removeTestSuiteConfirmation"
+                matTooltip="Delete Test Suite">
+                <mat-icon class="custom-btn-icon mr-0">delete</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu" [hasBackdrop]="true">
+                <button mat-menu-item class="custom-matmenu" (click)="setTestSuiteToRemove(testSuite)"
+                  data-toggle="modal" data-target="#removeTestSuiteConfirmation" matTooltip="Delete Test Suite">
+                  <mat-icon class="custom-btn-icon mr-0">delete</mat-icon>
+                  <span>Delete</span>
+                </button>
+              </mat-menu>
+            </div>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="test-suites-descrpt mb-2 ml-2">
+          {{ testSuite.description }}
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+
+    <div class="font-italic ml-1 font-weight-light" *ngIf="testSuites.length === 0">
+      Please add Test Suites to get started
+    </div>
+  </div>
+</div>
+
+<div class="modal fade modal-mini modal-primary deleteModal-dialog" id="removeTestSuiteConfirmation" tabindex="-1" role="dialog"
+  aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="popupframe-title">
+          <div class="mat-dialog-title">
+            <h2>Delete Test Suite</h2>
+          </div>
+        </div>
+      </div>
+      <div class="modal-body m-0 pt-3">
+        <p>
+          Are you sure you want to delete {{ testSuiteToRemove ? testSuiteToRemove.name : "" }} Test Suite?
+        </p>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button mat-raised-button class="btn btn-primary mr-2" type="button" (click)="removeTestSuite(testSuiteToRemove)"
+          data-dismiss="modal">Yes
+          <div class="ripple-container"></div>
+        </button>
+        <button mat-raised-button type="button" class="btn btn-primary-outline" data-dismiss="modal">
+          No
+        </button>        
+      </div>
+    </div>
+  </div>
+</div>

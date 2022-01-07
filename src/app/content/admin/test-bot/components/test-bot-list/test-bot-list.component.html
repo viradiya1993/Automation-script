@@ -1,0 +1,78 @@
+<div class="card custom-card mt-0 height-100">
+  <div class="card-header">
+    <div class="d-flex justify-content-between">
+      <h4 class="card-title text-primary">TestBots</h4>
+      <app-test-bot-form (testBotSaveChange)="onTestBotSaveChange()"></app-test-bot-form>
+    </div>
+  </div>
+  <div class="card-body listCol-scroll">
+    <div class="all-test-bot-row">
+      <div class="d-flex justify-content-between">
+        <span class="all-test-bot-title">All Test Bots</span>
+        <span class="badge badge-primary-light mr-4" matTooltip="Number of Test Bots">{{ testBots.length }}</span>
+      </div>
+    </div>
+    <mat-accordion class="list-contentScroll" *ngIf="testBots.length > 0" [multi]="false">
+      <mat-expansion-panel class="expansion-list test-bots-list" *ngFor="let testBot of testBots"
+        togglePosition="before">
+        <mat-expansion-panel-header>
+          <mat-panel-title class="test-bot-header-title d-flex justify-content-between">
+            <div class="test-bot-title" (click)="selectedTestBot(testBot)" matTooltip="{{ testBot.name }}">
+              {{ testBot.name }}
+            </div>
+            <div class="d-flex justify-content-between align-items-center">
+
+              <button mat-icon-button class="btn btn-link btn-primary btn-just-icon
+                  custom-btn-icon
+                  ml-1" (click)="openExecuteTestBotDialog(testBot)" matTooltip="Run Test Bot">
+                <mat-icon class="custom-btn-icon mr-0">play_circle_outline</mat-icon>
+              </button>
+              <button mat-icon-button class="
+                  btn btn-link btn-primary btn-just-icon
+                  custom-btn-icon
+                  ml-1
+                " [matMenuTriggerFor]="menu" aria-label="Test Bots More Menu">
+                <mat-icon class="material-icons">more_vert</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu">
+                <button mat-menu-item class="custom-matmenu" (click)="setTestBotToRemove(testBot)" data-toggle="modal"
+                  data-target="#removeTestBotConfirmation" matTooltip="Delete Test Bot">
+                  <mat-icon class="custom-btn-icon mr-0">delete</mat-icon>
+                  <span>Delete</span>
+                </button>
+              </mat-menu>
+            </div>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="test-bots-descrpt mb-2 ml-4">{{ testBot.description }}</div>
+      </mat-expansion-panel>
+    </mat-accordion>
+
+    <div class="font-italic ml-1 font-weight-light" *ngIf="testBots.length === 0">
+      Please add Test Bots to get started
+    </div>
+  </div>
+</div>
+
+<div class="modal fade modal-mini modal-primary" id="removeTestBotConfirmation" tabindex="-1" role="dialog"
+  aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-small">
+    <div class="modal-content">
+      <div class="modal-body m-0">
+        <p> Are you sure you want to delete
+          {{ testBotToRemove ? testBotToRemove.name : "" }} Test Bot along with
+          their related stories and test scripts?</p>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button mat-raised-button type="button" class="btn btn-primary-outline" data-dismiss="modal">
+          No
+        </button>
+        <button mat-raised-button class="btn btn-primary" type="button" (click)="removeTestBot(testBotToRemove)"
+          data-dismiss="modal">
+          Yes
+          <div class="ripple-container"></div>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

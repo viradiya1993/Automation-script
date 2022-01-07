@@ -1,0 +1,102 @@
+<div class="mt-2 mb-2" *ngIf="release">
+    <div class="list-contentScroll customScroll-contentScroll">
+        <form [formGroup]="releaseDetailsForm">
+            <div class="row">
+                <div class="col-md-7">
+                    <mat-form-field appearance="fill">
+                        <mat-label>Name</mat-label>
+                        <input matInput placeholder="Name" formControlName="name">
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-7">
+                    <mat-form-field appearance="fill">
+                        <mat-label>Description</mat-label>
+                        <textarea matInput rows="2" cols="50" placeholder="Description"
+                            formControlName="description"></textarea>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="popupframe-title">
+                            <div mat-dialog-title class="mt-3">
+                                <h2>Test Bots</h2>
+                            </div>
+                        </div>
+                        <span class="mt-3">Drag & Drop Test Bot from right panel</span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <mat-form-field class="custom-serachfield">
+                        <span matPrefix>
+                            <mat-icon>search</mat-icon>
+                        </span>
+                        <!-- <mat-label>
+                        <mat-icon>search</mat-icon> Search predefined steps
+                      </mat-label> -->
+                        <input matInput type="text" placeholder="Search Test Bot" [ngModelOptions]="{standalone: true}"
+                            [(ngModel)]="searchTextPS" />
+                        <button mat-button *ngIf="searchTextPS" matSuffix mat-icon-button aria-label="Clear"
+                            (click)="searchTextPS=''">
+                            <mat-icon>close</mat-icon>
+                        </button>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-8">
+                    <div id="test-steps-container" class="drag-drop-container">
+                        <div formArrayName="testBots" cdkDropList #testBotList="cdkDropList"
+                            [cdkDropListData]="getTestBotFormArray().controls" class="drag-drop-list"
+                            (cdkDropListDropped)="drop($event)">
+                            <div class="drag-drop-box flex-wrap"
+                                *ngFor="let testBotForm of getTestBotFormArray().controls; let i = index;" cdkDrag>
+                                <div class="d-flex justify-content-between w-100">
+                                    <div class="teststeps-rowform">
+                                        <span class="badge badge-primary">{{i + 1}}</span>
+                                        <span [formGroupName]="i">
+                                            <span class="releasetestbot-listNames">{{testBotForm.value.name}}</span>
+                                        </span>
+
+                                    </div>
+                                    <div class="teststep-delete">
+                                        <a class="btn btn-link btn-primary btn-just-icon move-icon"
+                                            (click)="deleteTestBot(i)" matTooltip="Remove Test Bot from Release">
+                                            <i class="material-icons"
+                                                aria-label="Remove Test Bot from Release">delete</i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div id="testBots-container" class="drag-drop-container">
+                        <div cdkDropList [cdkDropListConnectedTo]="[testBotList]"
+                            [cdkDropListData]="testBots | testbotFilter: {name: searchTextPS}" class="drag-drop-list"
+                            (cdkDropListDropped)="drop($event)">
+                            <div class="drag-drop-box release-form-testBotsrow"
+                                *ngFor="let testBot of testBots | testbotFilter: {name: searchTextPS};" cdkDrag>
+                                {{testBot.name}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <button mat-raised-button class="btn btn-primary mt-3" [disabled]="!releaseDetailsForm.valid"
+                (click)="onReleaseSaveClick();">Save</button>
+        </div>
+    </div>
+</div>

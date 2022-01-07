@@ -1,0 +1,140 @@
+<div class="main-content">
+	<div class="container-fluid">
+		<ng-container *ngIf="testBots.length === 0; else botDashboard">
+			<div class="row">
+				<div class="col-md-12 text-center bg-white p-5">
+					<ng-container *ngIf="!isLoading">
+						<div class="p-3">
+							There are no Test Bots to select from to view the Execution Results, either create a new
+							Test Bot or run at least one of the existing Test Bots to view the Execution Results.
+						</div>
+						<button class="btn btn-primary mt-3" cdkFocusInitial [routerLink]="['/test-bot']">GO TO TEST
+							BOT</button>
+					</ng-container>
+				</div>
+			</div>
+		</ng-container>
+	</div>
+</div>
+<ng-template #botDashboard>
+	<div class="row p-0">
+		<!-- Select Test Bot -->
+		<div class="col-xl-3 col-lg-4 col-4 p-0">
+			<div class="card custom-card h-100">
+				<div class="card-header">
+					<h4 class="card-title text-primary">Test Bots</h4>
+				</div>
+				<div class="card-body">
+					<mat-selection-list class="list-contentScroll customMat-selection-list" [multiple]="false"
+						[(ngModel)]="selectedBot" (selectionChange)="botChange(selectedBot[0])">
+						<mat-list-option *ngFor="let testBot of testBots; last as last" [value]="testBot"
+							matTooltip="{{testBot.name}}">
+							<!-- <mat-icon style="position: absolute;right: 10px">keyboard_arrow_right</mat-icon> -->
+							<h3 matLine class="testBot-title"> {{testBot.name}} </h3>
+							<mat-divider [inset]="true" *ngIf="!last"></mat-divider>
+						</mat-list-option>
+					</mat-selection-list>
+				</div>
+			</div>
+		</div>
+		<!-- END - Select Test Bot -->
+		<!--  Test Bot Reports -->
+		<div class="col-xl-9 col-lg-8 col-8 h-100">
+			<div class="card custom-card h-100">
+				<div class="card-header">
+					<h4 *ngIf="selectedBot[0] " class="card-title text-primary">{{ selectedBot[0].name }}</h4>
+				</div>
+				<div class="card-body">
+					<div class="row">
+						<!-- Last execution - PIE Chart  -->
+						<div class="col-xl-6 col-lg-12 col-sm-12 mb-4">
+							<div class="card custom-card charts-boxes h-100">
+								<h2 class="blacklight-title m-0 p-2">Latest Results -
+									{{lastExecutionReport?.executionName}}</h2>
+								<div class="card-body">
+									<h5 class="text-center m-1">
+										Total test cases - {{lastExecutionReport?.progress.total}}
+									</h5>
+									<canvas width="2" height="1" *ngIf="lastExecutionData?.length" baseChart [data]="lastExecutionData"
+										[labels]="lastExecutionLabels" [colors]="piChartColors" [chartType]="'doughnut'"
+										[options]="piChartOptions" [legend]="true">
+									</canvas>
+									<div class="pull-right">{{lastExecutionReport?.executionDate | date:'medium'}}</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-xl-6 col-lg-12 col-sm-12 mb-4">
+							<div class="card custom-card charts-boxes h-100">
+								<h2 class="blacklight-title m-0 p-2">Results History of {{ selectedBot[0].name }}</h2>
+								<div class="card-body">
+									<canvas class="mt-3" *ngIf="trendData?.length" baseChart [datasets]="trendData" [labels]="trendLabels"
+										[options]="areaChartOption" [legend]="true" [colors]="areaChartColors" [chartType]="'line'">
+									</canvas>
+									<div class="pull-right">{{executionTrend?.createdDate | date: 'medium'}}</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<!-- Suites - Horizonal Bar Chart  -->
+						<div class="col-xl-6 col-lg-12 col-sm-12 mb-4">
+							<div class="card custom-card charts-boxes h-100">
+								<h2 class="blacklight-title m-0 p-2">Test Suite Results</h2>
+								<div class="card-body">
+									<canvas *ngIf="testSuiteData.length" baseChart [datasets]="testSuiteData" [labels]="testSuitLabels"
+										[options]="barchartOptionForTestSuiteResults" [colors]="lineChartColors" [legend]="true"
+										[chartType]="'horizontalBar'">
+									</canvas>
+									<div class="pull-right">{{testSuiteReport?.executionDate | date:'medium'}}</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="col-xl-6 col-lg-12 col-sm-12 mb-4">
+							<div class="card custom-card charts-boxes h-100">
+								<h2 class="blacklight-title m-0 p-2">Test Results By Labels</h2>
+								<div class="card-body">
+									<canvas *ngIf="tagData.length" baseChart [datasets]="tagData" [labels]="tagDataLabels"
+										[options]="barchartOption" [colors]="lineChartColors" [legend]="true" [chartType]="'horizontalBar'">
+									</canvas>
+									<div class="pull-right">{{tagReport?.executionDate | date:'medium'}}</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xl-6 col-lg-12 col-sm-12 mb-4">
+							<div class="card custom-card charts-boxes h-100">
+								<h2 class="blacklight-title m-0 p-2">Test Results By Epic</h2>
+								<div class="card-body">
+									<canvas *ngIf="epicData.length" baseChart [datasets]="epicData" [labels]="epicDataLabels"
+										[options]="barchartOption" [colors]="lineChartColors" [legend]="true" [chartType]="'horizontalBar'">
+									</canvas>
+									<div class="pull-right">{{epicReport?.createdDate | date: 'medium'}}</div>
+								</div>
+								<div class="card-body" *ngIf="epicData.length == 0">
+									<h6 style="text-align: center;">No Data available</h6>
+								</div>
+							</div>
+						</div>
+						<div class="col-xl-6 col-lg-12 col-sm-12 mb-4">
+							<div class="card custom-card charts-boxes h-100">
+								<h2 class="blacklight-title m-0 p-2">Test Results By Story</h2>
+								<div class="card-body">
+									<canvas *ngIf="storyData.length" baseChart [datasets]="storyData" [labels]="storyDataLabels"
+										[options]="barchartOption" [colors]="lineChartColors" [legend]="true" [chartType]="'horizontalBar'">
+									</canvas>
+									<div class="pull-right">{{storyReport?.createdDate | date: 'medium'}}</div>
+								</div>
+								<div class="card-body" *ngIf="storyData.length == 0">
+									<h6 style="text-align: center;">No Data available</h6>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- END - Test Bot Reports -->
+	</div>
+</ng-template>
